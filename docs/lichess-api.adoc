@@ -1,0 +1,20 @@
+= Lichess API
+Abdulrahman Al Sabagh & Elias Just <author@asciidoctor.org>
+:toc:
+:icons: font
+:url-quickref: https://docs.asciidoctor.org/asciidoc/latest/syntax-quick-reference/
+
+
+== Funktionen, die von der Api zur Verfügung gestellt werden
+
+- Erstellung eines Accounts im Lichess
+- Authentifizierung mittels OAuth
+- Informationen über Streams, beste Spieler und online Spieler
+- Einbindung von programmierten Bots, die Schach spielen können.
+- Messaging Funktion
+- Analysen
+- Export & Streaming Funktionen für die Spielrunden
+- „Chess-puzzle“ und Challenges: z.B.: Was muss ich machen, damit ich das Spiel in zwei Bewegungen gewinnen kann.
+- „Teams“: Das ist nichts anders als eine Versammlung von unterschiedlichen Spielern, die miteinander kommunizieren und spielen können zusätzlich zu der Möglichkeit eines Wettbewerbes innerhalb des „Teams“ zu machen
+- Wettbewerbe
+- Einbindung von Schachstudien
