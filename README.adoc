@@ -1,7 +1,7 @@
 = 2223-4bhtim-swift-chess
 
 
-image::docs/images/systemarchitektur.001.jpeg[]
+image::docs/images/systemarchitektur.jpeg[]
 
 
 
