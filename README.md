@@ -1,7 +1,7 @@
 # Asciidoctor Github Pages Template
 
 ## Converting
-
+<!-- ... -->
 ![](./img/conver_strategy.jpg)
 
 1. will be converted into asciidoc format
