@@ -1,0 +1,26 @@
+= generate the project with https://github.com/yonaskolb/XcodeGen[xcodeGen]
+
+
+== installation with brew
+```
+brew install xcodegen
+```
+== you need to specify the xcode configuration in the project.yml
+- https://github.com/yonaskolb/XcodeGen/blob/master/Docs/ProjectSpec.md[full-docu]
+- example:
+```
+name: chess
+targets:
+  chess:
+    type: application
+    platform: iOS
+    deploymentTarget: 15.5
+    sources: [Sources]
+```
+
+== generate the project
+```
+xcodegen generate
+```
+
+
