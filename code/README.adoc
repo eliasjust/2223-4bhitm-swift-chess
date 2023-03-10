@@ -2,13 +2,17 @@
 
 
 == installation with brew
-```
+
+[source]
+----
 brew install xcodegen
-```
+----
 == you need to specify the xcode configuration in the project.yml
 - https://github.com/yonaskolb/XcodeGen/blob/master/Docs/ProjectSpec.md[full-docu]
 - example:
-```
+
+[source]
+----
 name: chess
 targets:
   chess:
@@ -16,11 +20,13 @@ targets:
     platform: iOS
     deploymentTarget: 15.5
     sources: [Sources]
-```
+----
 
 == generate the project
-```
+
+[source]
+----
 xcodegen generate
-```
+----
 
 
