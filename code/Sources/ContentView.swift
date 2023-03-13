@@ -1,8 +1,24 @@
 //
 //  ContentView.swift
-//  chess
+//  testapp
 //
-//  Created by Elias Just on 08.03.23.
+//  Created by Elias Just on 13.03.23.
 //
 
-import Foundation
+import SwiftUI
+
+struct ContentView: View {
+    var body: some View {
+        VStack {
+         
+            Text("Hello, world!")
+        }
+        .padding()
+    }
+}
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
+}
