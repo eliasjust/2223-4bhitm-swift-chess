@@ -9,9 +9,10 @@ import SwiftUI
 
 @main
 struct ChessApp: App {
+    let viewModel = ViewModel()
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(viewmodel: viewModel)
         }
     }
 }

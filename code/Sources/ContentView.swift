@@ -6,14 +6,12 @@
 //
 
 import SwiftUI
-import SwiftUI
 
 struct ContentView: View {
+    @ObservedObject var viewmodel : ViewModel
     var body: some View {
-        
         VStack {
-  
-            Board().padding()
+            Board(viewmodel: viewmodel).padding()
         }
         .padding()
     }
@@ -22,6 +20,7 @@ struct ContentView: View {
 
 
 struct Board: UIViewRepresentable {
+    var viewmodel: ViewModel
     let boardSize: CGFloat = 320.0
     let squareSize: CGFloat = 40.0
     let whiteColor = UIColor.gray.cgColor
@@ -31,8 +30,7 @@ struct Board: UIViewRepresentable {
         let kingLayer = CAShapeLayer()
         let kingPath = UIBezierPath()
         
-      
-        // Draw the cross
+        
         kingPath.move(to: CGPoint(x: squareSize / 2, y: squareSize / 4))
         kingPath.addLine(to: CGPoint(x: squareSize / 2, y: 3 * squareSize / 4))
         kingPath.move(to: CGPoint(x: squareSize / 4, y: squareSize / 2))
@@ -48,7 +46,7 @@ struct Board: UIViewRepresentable {
 
     
     
-    
+
     func makeUIView(context: Context) -> UIView {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: boardSize, height: boardSize))
         
@@ -77,13 +75,12 @@ struct Board: UIViewRepresentable {
         }
         
         let kingLayer = createKingLayer()
-
-        kingLayer.setAffineTransform(
-            CGAffineTransform(translationX: 4 * squareSize, y: 0 * squareSize)
-        )
-
+        let kingPos = viewmodel.drawKing(xPos: 4, yPos: 7, king: kingLayer)
+        
+        //view.transform =  CGAffineTransform(scaleX: 1.5, y: 1.5)
+        //view.layer.setAffineTransform(CGAffineTransform(rotationAngle: 45))
+    
         view.layer.addSublayer(kingLayer)
-
         return view
         
         
@@ -100,7 +97,8 @@ struct Board: UIViewRepresentable {
 
 
 struct ContentView_Previews: PreviewProvider {
+    static let viewModel = ViewModel()
     static var previews: some View {
-        ContentView()
+        ContentView(viewmodel: viewModel)
     }
 }
