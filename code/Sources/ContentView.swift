@@ -47,15 +47,11 @@ struct Board: UIViewRepresentable {
     
     
 
-    func makeUIView(context: Context) -> UIView {
-        let view = UIView(frame: CGRect(x: 0, y: 0, width: boardSize, height: boardSize))
-        
-        
-        
+    fileprivate func drawBoard(_ view: UIView) {
         //king.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
         //king.transform = CGAffineTransform(scaleX: 2, y: 2)
         //king.setAffineTransform(CGAffineTransform(translationX: 0, y: 0))
-    
+        
         for row in 0..<8 {
             for col in 0..<8 {
                 let squareLayer = CALayer()
@@ -73,13 +69,18 @@ struct Board: UIViewRepresentable {
                 
             }
         }
+    }
+    
+    func makeUIView(context: Context) -> UIView {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: boardSize, height: boardSize))
+        
+        drawBoard(view)
         
         let kingLayer = createKingLayer()
-        let kingPos = viewmodel.drawKing(xPos: 4, yPos: 7, king: kingLayer)
-        
+        let kingPos = drawKing(xPos: 4, yPos: 7, king: kingLayer)
         //view.transform =  CGAffineTransform(scaleX: 1.5, y: 1.5)
         //view.layer.setAffineTransform(CGAffineTransform(rotationAngle: 45))
-    
+        
         view.layer.addSublayer(kingLayer)
         return view
         
@@ -89,6 +90,14 @@ struct Board: UIViewRepresentable {
     func updateUIView(_ uiView: UIView, context: Context) {
         
         
+    }
+    
+    func drawKing(xPos: Double,yPos: Double ,king: CALayer) -> CALayer {
+        
+        king.setAffineTransform(
+            CGAffineTransform(translationX: squareSize * xPos , y: squareSize * yPos )
+        )
+        return king
     }
 }
 
