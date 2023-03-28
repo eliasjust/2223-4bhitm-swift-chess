@@ -8,14 +8,25 @@
 import Foundation
 
 struct Model {
+
+    var board: [[(piece: ChessPiece?, color: ChessColor?)]]
+
+    enum ChessPiece: String {
+        case king = "K"
+        case queen = "Q"
+        case rook = "R"
+        case bishop = "B"
+        case knight = "N"
+        case pawn = "P"
+    }
     
-    struct piece {
-        var id: Int
-        var chessColor: Int
-        var name: String
+    enum ChessColor {
+        case black, white
     }
 
-    
-    
+    init(board: [[(piece: ChessPiece?, color: ChessColor?)]]) {
+        self.board = board
+    }
+
 }
 
