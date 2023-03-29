@@ -27,6 +27,6 @@ class ViewModel: ObservableObject {
     var board:[[(piece: Model.ChessPiece?, color: Model.ChessColor?)]]{
         model.board
     }
-
+    
     
 }
