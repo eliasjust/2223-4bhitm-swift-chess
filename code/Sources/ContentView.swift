@@ -24,10 +24,10 @@ struct BordComposition: UIViewRepresentable {
     
     let boardSize: CGFloat = UIScreen.main.bounds.width * 0.9
     var squareSize: CGFloat { boardSize / 8 }
-    
+    var offset:CGFloat  {(UIScreen.main.bounds.width - boardSize) / 2 }
     let whiteColor = UIColor.gray.cgColor
     let blackColor = UIColor.black.cgColor
-    fileprivate var offset:CGFloat  {(UIScreen.main.bounds.width - boardSize) / 2}
+    
 
     
     fileprivate func drawPeaces(_ view: UIView) {
@@ -39,7 +39,7 @@ struct BordComposition: UIViewRepresentable {
                 let peaceLayer = createPeaceLayer(color: piece.color)
                 
                 if piece.piece != nil {
-                    drawPeace(xPos:  Double(i)   , yPos: Double(j), peace: peaceLayer)
+                    drawPeace(xPos: Double(i), yPos: Double(j), peace: peaceLayer)
                 }
                 view.layer.addSublayer(peaceLayer)
             }
@@ -47,19 +47,11 @@ struct BordComposition: UIViewRepresentable {
     }
     
     func makeUIView(context: Context) -> UIView {
-        
         let view = UIView(frame: CGRect(x: offset, y: 0, width: boardSize, height: boardSize))
-        
-     
-        
-        //view.layer.setAffineTransform(transform)
-        
         //let layerSize = view.layer.bounds.width
         //let transform = CGAffineTransform(translationX: view.layer.bounds.width / 2, y:
         drawBoard(view)
         drawPeaces(view)
-     
-      
         return view
     }
     
@@ -70,7 +62,7 @@ struct BordComposition: UIViewRepresentable {
     
     func drawPeace(xPos: Double,yPos: Double ,peace: CALayer) {
         peace.setAffineTransform(
-            CGAffineTransform(translationX: squareSize * xPos + offset  , y: squareSize * yPos )
+            CGAffineTransform(translationX: squareSize * xPos + offset, y: squareSize * yPos )
         )
     }
     
@@ -108,11 +100,12 @@ struct BordComposition: UIViewRepresentable {
         //king.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
         //king.transform = CGAffineTransform(scaleX: 2, y: 2)
         //king.setAffineTransform(CGAffineTransform(translationX: 0, y: 0))
+        let  squareSize =  view.layer.bounds.width / 8
         for row in 0..<8 {
             for col in 0..<8 {
                 let squareLayer = CALayer()
-                let location =  CGFloat(col) * squareSize + offset
-                squareLayer.frame = CGRect(x: location, y: CGFloat(row) * squareSize, width: squareSize, height: squareSize)
+                
+                squareLayer.frame = CGRect(x: CGFloat(col) * squareSize + offset , y: CGFloat(row) * squareSize, width: squareSize, height: squareSize)
                 
                 
                 if (row + col) % 2 == 0 {
