@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 
 
-let squareSize = 40.0
 class ViewModel: ObservableObject {
     
     //is going to be replaced by GBR-Code

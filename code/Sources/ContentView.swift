@@ -75,7 +75,7 @@ struct BordComposition: UIViewRepresentable {
         kingPath.addLine(to: CGPoint(x: squareSize / 2, y: 3 * squareSize / 4))
         kingPath.move(to: CGPoint(x: squareSize / 4, y: squareSize / 2))
         kingPath.addLine(to: CGPoint(x: 3 * squareSize / 4, y: squareSize / 2))
-
+        
         peaceLayer.path = kingPath.cgPath
         peaceLayer.lineWidth = 3
         

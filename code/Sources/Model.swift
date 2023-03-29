@@ -28,5 +28,13 @@ struct Model {
         self.board = board
     }
 
+    
+    /*
+    struct Piece {
+        var chessPeace: ChessPiece
+        var chessColor: ChessColor
+    }
+     */
+
 }
 
