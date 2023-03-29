@@ -22,47 +22,51 @@ struct ContentView: View {
 struct BordComposition: UIViewRepresentable {
     var viewmodel: ViewModel
     
-    let boardSize: CGFloat = UIScreen.main.bounds.width
+    let boardSize: CGFloat = UIScreen.main.bounds.width * 0.9
     var squareSize: CGFloat { boardSize / 8 }
+    var offset:CGFloat  {(UIScreen.main.bounds.width - boardSize) / 2 }
+    let whiteColor = UIColor.gray.cgColor
+    let blackColor = UIColor.black.cgColor
     
-    let whiteChessColor = UIColor.gray.cgColor
-    let blackChessColor = UIColor.black.cgColor
+
     
-     func makeUIView(context: Context) -> UIView {
-        let boardView = UIView(frame: CGRect(x: 0, y: 0, width: boardSize, height: boardSize))
-        drawBoard(boardView)
-        drawPeaces(boardView)
-        return boardView
-    }
-    
-    
-    func updateUIView(_ board: UIView, context: Context) {
-        
-    }
-    
-    
-    private func drawBoard(_ view: UIView) {
-        let  squareSize =  view.layer.bounds.width / 8
-        for row in 0..<8 {
-            for col in 0..<8 {
-                let squareLayer = CALayer()
+    fileprivate func drawPeaces(_ view: UIView) {
+        //drawPeace(xPos: 4, yPos: 7, king: kingLayer)
+        //view.transform =  CGAffineTransform(scaleX: 1.5, y: 1.5)
+        //view.layer.setAffineTransform(CGAffineTransform(rotationAngle: 45))
+        for (i, row) in viewmodel.board.enumerated() {
+            for(j, piece) in row.enumerated() {
+                let peaceLayer = createPeaceLayer(color: piece.color)
                 
-                squareLayer.frame = CGRect(x: CGFloat(col) * squareSize, y: CGFloat(row) * squareSize, width: squareSize, height: squareSize)
-                
-                
-                if (row + col) % 2 == 0 {
-                    squareLayer.backgroundColor = whiteChessColor
-                } else {
-                    squareLayer.backgroundColor = blackChessColor
-                    
+                if piece.piece != nil {
+                    drawPeace(xPos: Double(i), yPos: Double(j), peace: peaceLayer)
                 }
-                view.layer.addSublayer(squareLayer)
+                view.layer.addSublayer(peaceLayer)
             }
         }
     }
     
+    func makeUIView(context: Context) -> UIView {
+        let view = UIView(frame: CGRect(x: offset, y: 0, width: boardSize, height: boardSize))
+        //let layerSize = view.layer.bounds.width
+        //let transform = CGAffineTransform(translationX: view.layer.bounds.width / 2, y:
+        drawBoard(view)
+        drawPeaces(view)
+        return view
+    }
     
-    private func createPeaceLayer(color: Model.ChessColor?) -> CALayer {
+    func updateUIView(_ uiView: UIView, context: Context) {
+        
+        
+    }
+    
+    func drawPeace(xPos: Double,yPos: Double ,peace: CALayer) {
+        peace.setAffineTransform(
+            CGAffineTransform(translationX: squareSize * xPos + offset, y: squareSize * yPos )
+        )
+    }
+    
+    func createPeaceLayer(color: Model.ChessColor?) -> CALayer {
         let peaceLayer = CAShapeLayer()
         let kingPath = UIBezierPath()
         
@@ -81,37 +85,47 @@ struct BordComposition: UIViewRepresentable {
             
         } else {
             peaceLayer.strokeColor =
-            UIColor.black.cgColor
+            UIColor.white.cgColor
         }
+            
+        peaceLayer.fillColor = UIColor.clear.cgColor
         
         return peaceLayer
     }
+
     
     
-    
-    private func drawPeaces(_ view: UIView) {
-        for (i, row) in viewmodel.board.enumerated() {
-            for(j, piece) in row.enumerated() {
-                let peaceLayer = createPeaceLayer(color: piece.color)
+
+     func drawBoard(_ view: UIView) {
+        //king.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
+        //king.transform = CGAffineTransform(scaleX: 2, y: 2)
+        //king.setAffineTransform(CGAffineTransform(translationX: 0, y: 0))
+        let  squareSize =  view.layer.bounds.width / 8
+        for row in 0..<8 {
+            for col in 0..<8 {
+                let squareLayer = CALayer()
                 
-                if piece.piece != nil {
-                    drawPeace(xPos: Double(i), yPos: Double(j), peace: peaceLayer)
+                squareLayer.frame = CGRect(x: CGFloat(col) * squareSize + offset , y: CGFloat(row) * squareSize, width: squareSize, height: squareSize)
+                
+                
+                if (row + col) % 2 == 0 {
+                    squareLayer.backgroundColor = whiteColor
+                } else {
+                    squareLayer.backgroundColor = blackColor
+                    
                 }
-                view.layer.addSublayer(peaceLayer)
+                view.layer.addSublayer(squareLayer)
             }
         }
     }
     
     
-    private func drawPeace(xPos: Double,yPos: Double ,peace: CALayer) {
-        peace.setAffineTransform(
-            CGAffineTransform(translationX: squareSize * xPos , y: squareSize * yPos )
-        )
-    }
+    
+    
 }
 
 
-
+ 
 
 
 struct ContentView_Previews: PreviewProvider {
