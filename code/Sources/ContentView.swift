@@ -25,29 +25,23 @@ struct BordComposition: UIViewRepresentable {
     let boardSize: CGFloat = UIScreen.main.bounds.width
     var squareSize: CGFloat { boardSize / 8 }
     
-    let whiteColor = UIColor.gray.cgColor
-    let blackColor = UIColor.black.cgColor
-    
+    let whiteChessColor = UIColor.gray.cgColor
+    let blackChessColor = UIColor.black.cgColor
     
      func makeUIView(context: Context) -> UIView {
-        let view = UIView(frame: CGRect(x: 0, y: 0, width: boardSize, height: boardSize))
-        //let layerSize = view.layer.bounds.width
-        //let transform = CGAffineTransform(translationX: view.layer.bounds.width / 2, y:
-        drawBoard(view)
-        drawPeaces(view)
-        return view
+        let boardView = UIView(frame: CGRect(x: 0, y: 0, width: boardSize, height: boardSize))
+        drawBoard(boardView)
+        drawPeaces(boardView)
+        return boardView
     }
     
-    func updateUIView(_ uiView: UIView, context: Context) {
-        
+    
+    func updateUIView(_ board: UIView, context: Context) {
         
     }
     
     
     private func drawBoard(_ view: UIView) {
-        //king.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
-        //king.transform = CGAffineTransform(scaleX: 2, y: 2)
-        //king.setAffineTransform(CGAffineTransform(translationX: 0, y: 0))
         let  squareSize =  view.layer.bounds.width / 8
         for row in 0..<8 {
             for col in 0..<8 {
@@ -57,9 +51,9 @@ struct BordComposition: UIViewRepresentable {
                 
                 
                 if (row + col) % 2 == 0 {
-                    squareLayer.backgroundColor = whiteColor
+                    squareLayer.backgroundColor = whiteChessColor
                 } else {
-                    squareLayer.backgroundColor = blackColor
+                    squareLayer.backgroundColor = blackChessColor
                     
                 }
                 view.layer.addSublayer(squareLayer)
@@ -90,17 +84,12 @@ struct BordComposition: UIViewRepresentable {
             UIColor.black.cgColor
         }
         
-        peaceLayer.fillColor = UIColor.clear.cgColor
-        
         return peaceLayer
     }
     
     
     
     private func drawPeaces(_ view: UIView) {
-        //drawPeace(xPos: 4, yPos: 7, king: kingLayer)
-        //view.transform =  CGAffineTransform(scaleX: 1.5, y: 1.5)
-        //view.layer.setAffineTransform(CGAffineTransform(rotationAngle: 45))
         for (i, row) in viewmodel.board.enumerated() {
             for(j, piece) in row.enumerated() {
                 let peaceLayer = createPeaceLayer(color: piece.color)
@@ -118,7 +107,7 @@ struct BordComposition: UIViewRepresentable {
         peace.setAffineTransform(
             CGAffineTransform(translationX: squareSize * xPos , y: squareSize * yPos )
         )
-    } 
+    }
 }
 
 
