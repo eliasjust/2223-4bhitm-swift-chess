@@ -11,9 +11,9 @@ struct ContentView: View {
     @ObservedObject var viewmodel : ViewModel
     var body: some View {
         VStack {
-            BordComposition(viewmodel: viewmodel).padding()
+            BordComposition(viewmodel: viewmodel)
         }
-        .padding()
+        
     }
 }
 
@@ -21,8 +21,8 @@ struct ContentView: View {
 
 struct BordComposition: UIViewRepresentable {
     var viewmodel: ViewModel
-    let boardSize: CGFloat = 320.0
-    let squareSize: CGFloat = 40.0
+    let boardSize: CGFloat = UIScreen.main.bounds.width
+    let squareSize: CGFloat = (UIScreen.main.bounds.width) / 8
     let whiteColor = UIColor.gray.cgColor
     let blackColor = UIColor.black.cgColor
     
@@ -30,8 +30,13 @@ struct BordComposition: UIViewRepresentable {
     
     func makeUIView(context: Context) -> UIView {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: boardSize, height: boardSize))
+        //let layerSize = view.layer.bounds.width
+        //let transform = CGAffineTransform(translationX: view.layer.bounds.width / 2, y:
         
+        
+            
         drawBoard(view)
+        
         
         //drawPeace(xPos: 4, yPos: 7, king: kingLayer)
         //view.transform =  CGAffineTransform(scaleX: 1.5, y: 1.5)
@@ -94,7 +99,7 @@ struct BordComposition: UIViewRepresentable {
         //king.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
         //king.transform = CGAffineTransform(scaleX: 2, y: 2)
         //king.setAffineTransform(CGAffineTransform(translationX: 0, y: 0))
-        
+        let  squareSize =  view.layer.bounds.width / 8
         for row in 0..<8 {
             for col in 0..<8 {
                 let squareLayer = CALayer()
