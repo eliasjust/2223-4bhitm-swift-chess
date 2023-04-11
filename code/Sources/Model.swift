@@ -31,7 +31,7 @@ struct Model {
     
     /*
     struct Piece {
-        var chessPeace: ChessPiece
+        var chessPiece: ChessPiece
         var chessColor: ChessColor
     }
      */

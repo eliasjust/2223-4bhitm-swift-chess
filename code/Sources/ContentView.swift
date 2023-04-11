@@ -30,18 +30,18 @@ struct BordComposition: UIViewRepresentable {
     
 
     
-    fileprivate func drawPeaces(_ view: UIView) {
-        //drawPeace(xPos: 4, yPos: 7, king: kingLayer)
+    fileprivate func drawPieces(_ view: UIView) {
+        //drawPiece(xPos: 4, yPos: 7, king: kingLayer)
         //view.transform =  CGAffineTransform(scaleX: 1.5, y: 1.5)
         //view.layer.setAffineTransform(CGAffineTransform(rotationAngle: 45))
         for (i, row) in viewmodel.board.enumerated() {
             for(j, piece) in row.enumerated() {
-                let peaceLayer = createPeaceLayer(color: piece.color)
+                let pieceLayer = createPieceLayer(color: piece.color)
                 
                 if piece.piece != nil {
-                    drawPeace(xPos:CGFloat(i), yPos: CGFloat(j), peace: peaceLayer)
+                    drawPiece(xPos:CGFloat(i), yPos: CGFloat(j), piece: pieceLayer)
                 }
-                view.layer.addSublayer(peaceLayer)
+                view.layer.addSublayer(pieceLayer)
             }
         }
     }
@@ -51,7 +51,7 @@ struct BordComposition: UIViewRepresentable {
         //let layerSize = view.layer.bounds.width
         //let transform = CGAffineTransform(translationX: view.layer.bounds.width / 2, y:
         drawBoard(view)
-        drawPeaces(view)
+        drawPieces(view)
         return view
     }
     
@@ -60,14 +60,14 @@ struct BordComposition: UIViewRepresentable {
         
     }
     
-    func drawPeace(xPos: Double,yPos: Double ,peace: CALayer) {
-        peace.setAffineTransform(
+    func drawPiece(xPos: Double,yPos: Double ,piece: CALayer) {
+        piece.setAffineTransform(
             CGAffineTransform(translationX: squareSize * xPos + offset, y: squareSize * yPos )
         )
     }
     
-    func createPeaceLayer(color: Model.ChessColor?) -> CALayer {
-        let peaceLayer = CAShapeLayer()
+    func createPieceLayer(color: Model.ChessColor?) -> CALayer {
+        let pieceLayer = CAShapeLayer()
         let kingPath = UIBezierPath()
         
         
@@ -76,21 +76,21 @@ struct BordComposition: UIViewRepresentable {
         kingPath.move(to: CGPoint(x: squareSize / 4, y: squareSize / 2))
         kingPath.addLine(to: CGPoint(x: 3 * squareSize / 4, y: squareSize / 2))
         
-        peaceLayer.path = kingPath.cgPath
-        peaceLayer.lineWidth = 3
+        pieceLayer.path = kingPath.cgPath
+        pieceLayer.lineWidth = 3
         
         if color == .white {
-            peaceLayer.strokeColor =
+            pieceLayer.strokeColor =
             UIColor.white.cgColor
             
         } else {
-            peaceLayer.strokeColor =
+            pieceLayer.strokeColor =
             UIColor.white.cgColor
         }
             
-        peaceLayer.fillColor = UIColor.clear.cgColor
+        pieceLayer.fillColor = UIColor.clear.cgColor
         
-        return peaceLayer
+        return pieceLayer
     }
 
     
