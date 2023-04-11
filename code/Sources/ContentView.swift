@@ -36,12 +36,13 @@ struct BordComposition: UIViewRepresentable {
         //view.layer.setAffineTransform(CGAffineTransform(rotationAngle: 45))
         for (i, row) in viewmodel.board.enumerated() {
             for(j, piece) in row.enumerated() {
-                let pieceLayer = createPieceLayer(color: piece.color)
                 
                 if piece.piece != nil {
+                    let pieceLayer = createPieceLayer(color: piece.color)
                     drawPiece(xPos:CGFloat(i), yPos: CGFloat(j), piece: pieceLayer)
+                    view.layer.addSublayer(pieceLayer)
+
                 }
-                view.layer.addSublayer(pieceLayer)
             }
         }
     }
@@ -61,6 +62,7 @@ struct BordComposition: UIViewRepresentable {
     }
     
     func drawPiece(xPos: Double,yPos: Double ,piece: CALayer) {
+        
         piece.setAffineTransform(
             CGAffineTransform(translationX: squareSize * xPos + offset, y: squareSize * yPos )
         )
@@ -85,7 +87,7 @@ struct BordComposition: UIViewRepresentable {
             
         } else {
             pieceLayer.strokeColor =
-            UIColor.white.cgColor
+            UIColor.green.cgColor
         }
             
         pieceLayer.fillColor = UIColor.clear.cgColor
