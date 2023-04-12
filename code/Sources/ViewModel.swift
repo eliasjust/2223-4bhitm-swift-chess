@@ -38,7 +38,7 @@ class ViewModel: ObservableObject {
     }
     
     
-    //is going to be replaced by GBR-Code
+    //is going to be replaced by GBR-Code or VEN
     @Published private(set) var model =  Model(board: [
         [Piece(chessPiece: .rook, chessColor: .black), Piece(chessPiece: .knight, chessColor: .black), Piece(chessPiece: .bishop, chessColor: .black), Piece(chessPiece: .queen, chessColor: .black), Piece(chessPiece: .king, chessColor: .black), Piece(chessPiece: .bishop, chessColor: .black), Piece(chessPiece: .knight, chessColor: .black), Piece(chessPiece: .rook, chessColor: .black)],
         [Piece(chessPiece: .pawn, chessColor: .black), Piece(chessPiece: .pawn, chessColor: .black), Piece(chessPiece: .pawn, chessColor: .black), Piece(chessPiece: .pawn, chessColor: .black), Piece(chessPiece: .pawn, chessColor: .black), Piece(chessPiece: .pawn, chessColor: .black), Piece(chessPiece: .pawn, chessColor: .black), Piece(chessPiece: .pawn, chessColor: .black)],

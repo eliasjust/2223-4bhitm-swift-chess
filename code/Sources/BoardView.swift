@@ -18,8 +18,8 @@ class BoardView: UIView {
     let boardSize: CGFloat = UIScreen.main.bounds.width * 0.9
     var squareSize: CGFloat { boardSize  / 8 }
     var offset:CGFloat  = 0
-    let whiteColor = UIColor.gray.cgColor
-    let blackColor = UIColor.black.cgColor
+    let whiteColor = UIColor.lightGray.cgColor
+    let blackColor = UIColor.darkGray.cgColor
     let activeColor = UIColor.yellow.cgColor
     
     
@@ -32,8 +32,8 @@ class BoardView: UIView {
             for (j, piece) in row.enumerated() {
                 if  piece != nil {
                     
-                    //let pieceLayer = createPieceLayer(piece: piece?.chessPiece, color: piece?.chessColor)
-                    let pieceLayer = createPieceLayerPaint(color: piece?.chessColor)
+                    let pieceLayer = createPieceLayer(piece: piece?.chessPiece, color: piece?.chessColor)
+                    //let pieceLayer = createPieceLayerPaint(color: piece?.chessColor)
                     
                     drawPiece(xPos: CGFloat(j), yPos: CGFloat(i), piece: pieceLayer)
                     
@@ -45,7 +45,7 @@ class BoardView: UIView {
     }
     
     
-    func createPieceLayerPaint(color: Model.ChessColor?) -> CALayer {
+   /* func createPieceLayerPaint(color: Model.ChessColor?) -> CALayer {
         let pieceLayer = CAShapeLayer()
         let kingPath = UIBezierPath()
         
@@ -70,7 +70,7 @@ class BoardView: UIView {
         
         pieceLayer.fillColor = UIColor.clear.cgColor
         return pieceLayer
-    }
+    }*/
     
     
     
@@ -123,14 +123,34 @@ class BoardView: UIView {
         
         let pieceLayer = CALayer()
         pieceLayer.bounds = CGRect(x:0,y:0,width:squareSize,height: squareSize)
-        
+        pieceLayer.position = CGPoint(x: squareSize / 2, y: squareSize / 2)
         
         let imageName: String
         switch (piece, color) {
         case (.king, .white):
             imageName = "white_king"
+        case (.rook, .white):
+            imageName = "white_rook"
+        case (.pawn, .white):
+            imageName = "white_pawn"
+        case (.bishop, .white):
+            imageName = "white_bishop"
+        case (.knight, .white):
+            imageName = "white_knight"
+        case (.queen, .white):
+            imageName = "white_queen"
         case (.king, .black):
-            imageName = "yeah"
+            imageName = "black_king"
+        case (.rook, .black):
+            imageName = "black_rook"
+        case (.pawn, .black):
+            imageName = "black_pawn"
+        case (.knight, .black):
+            imageName = "black_knight"
+        case (.bishop, .black):
+            imageName = "black_bishop"
+        case (.queen, .black):
+            imageName = "black_queen"
         default:
             imageName = ""
         }
