@@ -23,12 +23,15 @@ class ViewModel: ObservableObject {
         [(.rook, .white), (.knight, .white), (.bishop, .white), (.queen, .white), (.king, .white), (.bishop, .white), (.knight, .white), (.rook, .white)],
     ])
     
-    var board:[[(piece: Model.ChessPiece?, color: Model.ChessColor?)]]{
+    
+    typealias boardClass = [[(piece: Model.ChessPiece?, color: Model.ChessColor?)]]
+    
+    var board: boardClass{
         model.board
     }
     
     
 }
 /**
-
+ 
  */
