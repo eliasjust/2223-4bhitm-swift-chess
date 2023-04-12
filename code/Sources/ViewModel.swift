@@ -7,26 +7,29 @@
 
 import Foundation
 import SwiftUI
-
+import Combine
 
 class ViewModel: ObservableObject {
     
+    typealias Piece = Model.Piece
+    
     //is going to be replaced by GBR-Code
     @Published private var model =  Model(board: [
-        [(.rook, .black), (.knight, .black), (.bishop, .black), (.queen, .black), (.king, .black), (.bishop, .black), (.knight, .black), (.rook, .black)],
-        [(.pawn, .black), (.pawn, .black), (.pawn, .black), (.pawn, .black), (.pawn, .black), (.pawn, .black), (.pawn, .black), (.pawn, .black)],
-        [(nil, nil), (nil, nil), (nil, nil), (nil, nil), (nil, nil), (nil, nil),(nil, nil), (nil, nil)],
-        [(nil, nil), (nil, nil), (nil, nil), (nil, nil), (nil, nil), (nil, nil), (nil, nil), (nil, nil)],
-        [(nil, nil), (nil, nil), (nil, nil), (nil, nil), (nil, nil), (nil, nil), (nil, nil), (nil, nil)],
-        [(nil, nil), (nil, nil), (nil, nil), (nil, nil), (nil, nil), (nil, nil), (nil, nil), (nil, nil)],
-        [(.pawn, .white), (.pawn, .white), (.pawn, .white), (.pawn, .white), (.pawn, .white), (.pawn, .white), (.pawn, .white), (.pawn, .white)],
-        [(.rook, .white), (.knight, .white), (.bishop, .white), (.queen, .white), (.king, .white), (.bishop, .white), (.knight, .white), (.rook, .white)],
+        [Piece(chessPiece: .rook, chessColor: .black), Piece(chessPiece: .knight, chessColor: .black), Piece(chessPiece: .bishop, chessColor: .black), Piece(chessPiece: .queen, chessColor: .black), Piece(chessPiece: .king, chessColor: .black), Piece(chessPiece: .bishop, chessColor: .black), Piece(chessPiece: .knight, chessColor: .black), Piece(chessPiece: .rook, chessColor: .black)],
+        [Piece(chessPiece: .pawn, chessColor: .black), Piece(chessPiece: .pawn, chessColor: .black), Piece(chessPiece: .pawn, chessColor: .black), Piece(chessPiece: .pawn, chessColor: .black), Piece(chessPiece: .pawn, chessColor: .black), Piece(chessPiece: .pawn, chessColor: .black), Piece(chessPiece: .pawn, chessColor: .black), Piece(chessPiece: .pawn, chessColor: .black)],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [Piece(chessPiece: .pawn, chessColor: .white), Piece(chessPiece: .pawn, chessColor: .white), Piece(chessPiece: .pawn, chessColor: .white), Piece(chessPiece: .pawn, chessColor: .white), Piece(chessPiece: .pawn, chessColor: .white), Piece(chessPiece: .pawn, chessColor: .white), Piece(chessPiece: .pawn, chessColor: .white), Piece(chessPiece: .pawn, chessColor:  .white)],
+        
+        [Piece(chessPiece: .rook, chessColor: .white), Piece(chessPiece: .knight, chessColor: .white), Piece(chessPiece: .bishop, chessColor: .white), Piece(chessPiece: .queen, chessColor: .white), Piece(chessPiece: .king, chessColor:  .white), Piece(chessPiece: .bishop, chessColor: .white), Piece(chessPiece: .knight, chessColor: .white), Piece(chessPiece: .rook, chessColor: .white)],
     ])
     
     
-    typealias boardClass = [[(piece: Model.ChessPiece?, color: Model.ChessColor?)]]
+    typealias BoardClass = [[Piece?]]
     
-    var board: boardClass{
+    var board: BoardClass {
         model.board
     }
     
