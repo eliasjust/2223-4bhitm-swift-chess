@@ -28,6 +28,8 @@ class BoardView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     fileprivate func drawPieces() {
+        layer.sublayers?[0].setNeedsDisplay()
+        layer.setNeedsLayout()
         for (i, row) in viewmodel.board.enumerated() {
             for (j, piece) in row.enumerated() {
                 if  piece != nil {
@@ -45,73 +47,37 @@ class BoardView: UIView {
     }
     
     
-   /* func createPieceLayerPaint(color: Model.ChessColor?) -> CALayer {
-        let pieceLayer = CAShapeLayer()
-        let kingPath = UIBezierPath()
-        
-        
-        kingPath.move(to: CGPoint(x: squareSize / 2, y: squareSize / 4))
-        kingPath.addLine(to: CGPoint(x: squareSize / 2, y: 3 * squareSize / 4))
-        kingPath.move(to: CGPoint(x: squareSize / 4, y: squareSize / 2))
-        kingPath.addLine(to: CGPoint(x: 3 * squareSize / 4, y: squareSize / 2))
-        
-        pieceLayer.path = kingPath.cgPath
-        pieceLayer.lineWidth = 3
-        
-        if color == .white {
-            pieceLayer.strokeColor =
-            UIColor.white.cgColor
-            
-        } else {
-            pieceLayer.strokeColor =
-            UIColor.green.cgColor
-        }
-        
-        
-        pieceLayer.fillColor = UIColor.clear.cgColor
-        return pieceLayer
-    }*/
+    /* func createPieceLayerPaint(color: Model.ChessColor?) -> CALayer {
+     let pieceLayer = CAShapeLayer()
+     let kingPath = UIBezierPath()
+     
+     
+     kingPath.move(to: CGPoint(x: squareSize / 2, y: squareSize / 4))
+     kingPath.addLine(to: CGPoint(x: squareSize / 2, y: 3 * squareSize / 4))
+     kingPath.move(to: CGPoint(x: squareSize / 4, y: squareSize / 2))
+     kingPath.addLine(to: CGPoint(x: 3 * squareSize / 4, y: squareSize / 2))
+     
+     pieceLayer.path = kingPath.cgPath
+     pieceLayer.lineWidth = 3
+     
+     if color == .white {
+     pieceLayer.strokeColor =
+     UIColor.white.cgColor
+     
+     } else {
+     pieceLayer.strokeColor =
+     UIColor.green.cgColor
+     }
+     
+     
+     pieceLayer.fillColor = UIColor.clear.cgColor
+     return pieceLayer
+     }*/
     
     
     
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let fingerLocation  = touches.first?.location(in: self)
-        print(fingerLocation ?? 0)
-        if fingerLocation != nil && fingerLocation?.x != nil && fingerLocation?.y != nil {
-            let column = Int((fingerLocation?.x ?? -1)  / (squareSize))
-            let row = Int((fingerLocation?.y ?? -1) / squareSize)
-            
-                viewmodel.handleMove(data: viewmodel.setCoordinates(row: row, column: column))
-            
-            var squarePreviousColor: CGColor? = nil
-            
-            
-            if viewmodel.fromPosition != nil {
-                
-                if viewmodel.toPosition != nil {
-                    drawPieces()
-                    let tappedSquareIndex =  viewmodel.fromPosition!.row * 8 + viewmodel.fromPosition!.column
-                    let tappedSquare = layer.sublayers?[tappedSquareIndex]
-                    tappedSquare?.backgroundColor = viewmodel.previousColor!
-                    
-                    viewmodel.previousColor = nil
-                    viewmodel.fromPosition = nil
-                    viewmodel.toPosition = nil
-                } else {
-                    let tappedSquareIndex =  viewmodel.fromPosition!.row * 8 + viewmodel.fromPosition!.column
-                    let tappedSquare = layer.sublayers?[tappedSquareIndex]
-                    viewmodel.previousColor = tappedSquare?.backgroundColor
-                    tappedSquare?.backgroundColor = activeColor
-                    
-                }
-                
-            }
-            
-            print ("from: \(viewmodel.fromPosition) to: \(viewmodel.toPosition)")
-            
-        }
-    }
+ 
     func drawPiece(xPos: Double,yPos: Double ,piece: CALayer) {
         
         piece.setAffineTransform(
@@ -169,17 +135,70 @@ class BoardView: UIView {
     func drawBoard() {
         
         let  squareSize =  bounds.width / 8
-        for row in 0..<8 {
+        let rowWidth = bounds.width
+        
+        for row in  0..<8 {
+            let rowView = UIView()
+            rowView.layer.frame = CGRect(x: 0 , y:   CGFloat(row) * squareSize, width: rowWidth, height: squareSize)
+            self.addSubview(rowView)
+          
+
             for col in 0..<8 {
-                let squareLayer = CALayer()
-                squareLayer.frame = CGRect(x: CGFloat(col) * squareSize + offset , y: CGFloat(row) * squareSize, width: squareSize, height: squareSize)
+                let colView = UIView()
+                let x = CGFloat(col) * squareSize
+        
+                colView.layer.frame = CGRect(x: x , y: 0, width: squareSize, height: squareSize)
                 let color  = (row + col) % 2 == 0 ? whiteColor  : blackColor
-                squareLayer.backgroundColor = color
-                layer.addSublayer(squareLayer)
+                colView.layer.backgroundColor = color
+                rowView.addSubview(colView)
+                let tapGeseture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
+                colView.addGestureRecognizer(tapGeseture)
+            
+                
             }
         }
+       
+     
         
         
+    }
+    @objc func handleTap(_ sender: UITapGestureRecognizer) {
+        print("called")
+        if let colView = sender.view,
+           let rowView = colView.superview
+          {
+            let rowIndex = subviews.firstIndex(of: rowView)
+
+            let colIndex = rowView.subviews.firstIndex(of: colView)
+            viewmodel.handleMove(data: ViewModel.Coordinates(row: rowIndex!, column: colIndex!))
+            print(viewmodel.fromPosition)
+            print(viewmodel.toPosition)
+            if viewmodel.fromPosition != nil {
+                
+                if viewmodel.toPosition != nil {
+                   let row = viewmodel.fromPosition!.row
+                    let col = viewmodel.fromPosition!.column
+                    subviews[row].subviews[col].backgroundColor = viewmodel.previousColor
+                    
+           
+                    self.setNeedsDisplay(self.layer.frame)
+                    viewmodel.clearValues()
+                   
+                } else {
+                    viewmodel.previousColor =  colView.backgroundColor
+                    colView.backgroundColor = UIColor(cgColor:activeColor)
+                }
+            }
+            
+            
+            
+            
+        } else {
+            print(sender.view?.bounds.maxY ?? "sender view does not exist")
+            print(sender.view?.superview ??  "super view does not exist")
+            print("not found")
+        }
+     
     }
     
     

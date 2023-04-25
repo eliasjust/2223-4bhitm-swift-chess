@@ -14,11 +14,16 @@ class ViewModel: ObservableObject {
     typealias Piece = Model.Piece
     var fromPosition: Coordinates? = nil
     var toPosition:Coordinates? = nil
-    var previousColor:CGColor? = nil
+    var previousColor:UIColor? = nil
     
     struct Coordinates  {
         var  row: Int
         var column: Int
+    }
+    
+    func clearValues () {
+        fromPosition = nil
+        toPosition = nil
     }
     
     
@@ -59,8 +64,8 @@ class ViewModel: ObservableObject {
     }
     
     func handleMove(data:Coordinates) -> Void {
-        print("toPosition \(toPosition)")
-        print(fromPosition)
+       
+        
         let pieceAtGivenCoordinates = board[data.row][data.column]
         if pieceAtGivenCoordinates == nil && fromPosition == nil {
             return
@@ -75,6 +80,7 @@ class ViewModel: ObservableObject {
             let piece = board[fromPosition!.row][fromPosition!.column]
             model.board[fromPosition!.row][fromPosition!.column] = nil
             model.board[toPosition!.row][toPosition!.column] = piece
+         
             
         }
         

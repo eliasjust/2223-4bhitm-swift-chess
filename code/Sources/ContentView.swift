@@ -13,9 +13,9 @@ struct ContentView: View {
     var body: some View {
       
         VStack {
-            BoardViewWrapper(viewmodel: viewmodel).padding()
+            BoardViewWrapper(viewmodel: viewmodel)
             
-        }.padding()
+        }
         
     }
 }
