@@ -20,3 +20,11 @@ https://xd.adobe.com/view/695a6e9d-72ae-409d-8226-fe39be7ad7df-3c09/[clickdummy]
 - Hstack()
 - Vstack()
 - echte züge mit echten figuren
+
+== Sprint review 26.4.2023
+- Chess Rules should apply
+- basic moves
+- without check and special moves
+
+- possible move highlight
+- who has to move
