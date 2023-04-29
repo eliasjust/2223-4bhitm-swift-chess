@@ -131,7 +131,7 @@ class BoardView: UIView {
             let rowIndex = subviews.firstIndex(of: rowView)
             let colIndex = rowView.subviews.firstIndex(of: colView)
             
-            viewmodel.handleMove(data: ViewModel.Coordinates(row: rowIndex!, column: colIndex!))
+            viewmodel.handleTap(tappedPosition: ViewModel.Coordinates(row: rowIndex!, column: colIndex!))
             let fromPosition = viewmodel.fromPosition
             let toPosition = viewmodel.toPosition
             if fromPosition != nil {
