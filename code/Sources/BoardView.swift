@@ -20,7 +20,9 @@ class BoardView: UIView {
     let whiteColor = UIColor.lightGray.cgColor
     let blackColor = UIColor.darkGray.cgColor
     let activeColor = UIColor.yellow.cgColor
-    
+    var activeLayerCoordinates:ViewModel.Coordinates? {viewmodel.fromSquare}
+    var activeLayerColor:UIColor? = nil
+    var predectionCoordinatesOnFields:[ViewModel.Coordinates] = []
     
     
     required init?(coder: NSCoder) {
@@ -42,6 +44,42 @@ class BoardView: UIView {
     
     
     
+    fileprivate func drawPredictions() {
+       
+      
+        
+        for predection in viewmodel.predictions {
+            
+           
+            
+            let center = CGPoint(x: squareSize / 2 , y: squareSize / 2)
+            let radius: CGFloat = squareSize / 4
+
+           
+            let path = UIBezierPath(arcCenter: center, radius: radius, startAngle: 0, endAngle: CGFloat.pi * 2, clockwise: true)
+
+            let shapeLayer = CAShapeLayer()
+            shapeLayer.path = path.cgPath
+            shapeLayer.fillColor = UIColor.clear.cgColor
+            shapeLayer.strokeColor = UIColor.blue.cgColor
+            shapeLayer.lineWidth = 2
+         
+            
+            let circleView = UIView(frame: CGRect(x: 0, y:0 , width: radius * 2 , height: radius * 2))
+            circleView.center = center
+            circleView.backgroundColor = UIColor.yellow
+            circleView.layer.cornerRadius = radius
+            let row = predection!.row
+            let column = predection!.column
+            predectionCoordinatesOnFields.append(ViewModel.Coordinates(row: row, column:column))
+            subviews[row].subviews[column].addSubview(circleView)
+        
+        
+        }
+    }
+    
+    
+    
     
 
     
@@ -52,6 +90,8 @@ class BoardView: UIView {
        
         
         let imageName: String
+        
+      
         switch (piece, color) {
         case (.king, .white):
             imageName = "white_king"
@@ -125,25 +165,37 @@ class BoardView: UIView {
         
     }
     @objc func handleTap(_ sender: UITapGestureRecognizer) {
+        
         if let colView = sender.view,
            let rowView = colView.superview
         {
+            
+            
             let rowIndex = subviews.firstIndex(of: rowView)
             let colIndex = rowView.subviews.firstIndex(of: colView)
             
             viewmodel.handleTap(tappedPosition: ViewModel.Coordinates(row: rowIndex!, column: colIndex!))
+            
+            
+            
+            
+            
             let fromPosition = viewmodel.fromSquare
             let toPosition = viewmodel.toSquare
             if fromPosition != nil {
-                
+                drawPredictions()
                 if toPosition != nil {
 
                     self.setNeedsDisplay()
                     self.viewmodel.clearValues()
                     
                 } else {
+                
                     colView.backgroundColor = UIColor(cgColor:activeColor)
+                    
                 }
+            } else {
+                
             }
             
             
@@ -163,6 +215,7 @@ class BoardView: UIView {
         subviews.forEach{$0.removeFromSuperview()}
         drawBoard()
         drawPieces()
+        drawPredictions()
         
         
     }

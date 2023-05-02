@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import SwiftUI
+
 import Combine
 
 class ViewModel: ObservableObject {
@@ -15,10 +15,11 @@ class ViewModel: ObservableObject {
     typealias ChessColor = Model.ChessColor
     var fromSquare: Coordinates? = nil
     var toSquare: Coordinates? = nil
-    var previousColor: UIColor? = nil
+    
     var currentTurnColor: ChessColor = .white
     ///needed for en passant
     var pawnMadeTwoMoves: Coordinates? = nil
+    var predictions: [Coordinates?] = []
     
     struct Coordinates: Equatable {
         var  row: Int
@@ -29,7 +30,7 @@ class ViewModel: ObservableObject {
         fromSquare = nil
         toSquare = nil
     }
-    
+    typealias ChessPiece = Model.ChessPiece
     
     func setCoordinates (row: Int, column: Int) -> Coordinates {
         return Coordinates(row: row, column: column)
@@ -59,12 +60,13 @@ class ViewModel: ObservableObject {
     }
     
     func handleTap(tappedPosition:Coordinates) -> Void {
-        
+        predictions = []
         let pieceAtGivenCoordinates = board[tappedPosition.row][tappedPosition.column]
         
         /// true: select piece; else: try to move piece
         if fromSquare == nil && pieceAtGivenCoordinates != nil && pieceAtGivenCoordinates?.chessColor == currentTurnColor {
             fromSquare = tappedPosition
+            predictions = getValidMoves(position: tappedPosition)
         } else if fromSquare != nil && toSquare == nil {
             toSquare = tappedPosition
             handleMove(fromPosition: fromSquare!, toPosition: tappedPosition)
@@ -130,9 +132,26 @@ class ViewModel: ObservableObject {
     }
     
     func getValidMoves(position:Coordinates) -> [Coordinates?] {
-        let piece = model.board[position.row][position.column]
+         let piece = model.board[position.row][position.column]
+        if piece == nil {
+            return [toSquare]
+        } else {
         
-        if piece?.chessPiece == .pawn {
+        typealias MoveFunction = (Coordinates) -> [Coordinates?]
+        
+        let getValidMovesForEachTypeOfPieces: [ChessPiece:MoveFunction] = [
+            .bishop: getValidMovesBishop,
+            .king: getValidMovesKing,
+            .rook: getValidMovesRook,
+            .knight: getValidMovesKnight,
+            .pawn: getValidMovesPawn,
+            .queen: getValidMovesQueen,
+        ]
+            let typeOfPiece = piece!.chessPiece
+            guard let moveHandler = getValidMovesForEachTypeOfPieces[typeOfPiece] else { return [toSquare] }
+            return moveHandler(position)
+        }
+        /*if piece?.chessPiece == .pawn {
             return getValidMovesPawn(position: position)
         }else if piece?.chessPiece == .rook {
             return getValidMovesRook(square: position)
@@ -144,10 +163,10 @@ class ViewModel: ObservableObject {
             return getValidMovesQueen(square: position)
         }else if piece?.chessPiece == .king {
             return getValidMovesKing(square: position)
-        }
+        }*/
         
         
-        return [toSquare]
+        //return [toSquare]
         
     }
 
@@ -195,24 +214,24 @@ class ViewModel: ObservableObject {
     
  
     
-    func getValidMovesRook(square:Coordinates) -> [Coordinates?] {
+    func getValidMovesRook(_ square:Coordinates) -> [Coordinates?] {
         let directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
         return getValidMovesWithDirections(square: square, directions: directions, maxReach: 7)
     }
-    func getValidMovesBishop(square:Coordinates) -> [Coordinates?] {
+    func getValidMovesBishop(_ square:Coordinates) -> [Coordinates?] {
         let directions = [(1, 1), (1, -1), (-1, 1), (-1, -1)]
         return getValidMovesWithDirections(square: square, directions: directions, maxReach: 7)
     }
-    func getValidMovesKnight(square:Coordinates) -> [Coordinates?] {
+    func getValidMovesKnight(_ square:Coordinates) -> [Coordinates?] {
         let directions = [(-1, -2), (-2, -1), (-2, 1), (-1, 2),  (1, 2), (2, 1), (2, -1), (1, -2)]
         return getValidMovesWithDirections(square: square, directions: directions, maxReach: 1)
     }
     
-    func getValidMovesQueen(square: Coordinates) -> [Coordinates?] {
+    func getValidMovesQueen(_ square: Coordinates) -> [Coordinates?] {
         let directions = [(0, 1), (1, 0), (0, -1), (-1, 0),(1, 1), (1, -1), (-1, 1), (-1, -1)]
         return getValidMovesWithDirections(square: square, directions: directions, maxReach: 7)
     }
-    func getValidMovesKing(square:Coordinates) -> [Coordinates?] {
+    func getValidMovesKing(_ square:Coordinates) -> [Coordinates?] {
         let directions = [(0, 1), (1, 0), (0, -1), (-1, 0),(1, 1), (1, -1), (-1, 1), (-1, -1)]
         return getValidMovesWithDirections(square: square, directions: directions, maxReach: 1)
     }
