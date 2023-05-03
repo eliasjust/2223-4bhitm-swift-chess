@@ -28,3 +28,17 @@ https://xd.adobe.com/view/695a6e9d-72ae-409d-8226-fe39be7ad7df-3c09/[clickdummy]
 
 - possible move highlight
 - who has to move
+
+
+== Sprint Review
+- Rochade, Check Checkmate
+- show captured pieces
+- no data im ViewModel
+- State variablen im BoardView
+- Protokoll for alls PieceTypes
+- map for getValidMoves
+* while in own function
+* enum directions
+
+- double tab
+- en passant capture
