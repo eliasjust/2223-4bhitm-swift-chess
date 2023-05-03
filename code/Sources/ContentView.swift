@@ -19,6 +19,10 @@ struct ContentView: View {
         
     }
 }
+
+
+
+
 struct BoardViewWrapper: UIViewRepresentable {
     var viewmodel: ViewModel
     func makeUIView(context: Context) -> some UIView {
@@ -31,11 +35,17 @@ struct BoardViewWrapper: UIViewRepresentable {
     }
     
 }
+    
 
 
-    struct ContentView_Previews: PreviewProvider {
-        static let viewModel = ViewModel()
-        static var previews: some View {
-            ContentView(viewmodel: viewModel)
-        }
+
+
+
+
+
+struct ContentView_Previews: PreviewProvider {
+    static let viewModel = ViewModel()
+    static var previews: some View {
+        ContentView(viewmodel: viewModel)
     }
+}

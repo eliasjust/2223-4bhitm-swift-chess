@@ -11,10 +11,12 @@ import Combine
 
 class ViewModel: ObservableObject {
     
+
     typealias Piece = Model.Piece
     typealias ChessColor = Model.ChessColor
     var fromSquare: Coordinates? = nil
     var toSquare: Coordinates? = nil
+
     
     var currentTurnColor: ChessColor = .white
     ///needed for en passant
@@ -59,6 +61,7 @@ class ViewModel: ObservableObject {
         model.board
     }
     
+
     func handleTap(tappedPosition:Coordinates) -> Void {
         predictions = []
         let pieceAtGivenCoordinates = board[tappedPosition.row][tappedPosition.column]
@@ -246,7 +249,7 @@ class ViewModel: ObservableObject {
         board[coords.row][coords.column]!.chessColor
     }
     
-    
+
     
     
 }

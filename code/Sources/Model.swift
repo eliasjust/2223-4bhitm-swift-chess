@@ -13,15 +13,15 @@ struct Model {
     var board: BoardClass
     
     enum ChessPiece: String {
-        case king = "K"
-        case queen = "Q"
-        case rook = "R"
-        case bishop = "B"
-        case knight = "N"
-        case pawn = "P"
+        case king
+        case queen
+        case rook
+        case bishop
+        case knight
+        case pawn
     }
     
-    enum ChessColor {
+    enum ChessColor:String {
         case black, white
     }
     
