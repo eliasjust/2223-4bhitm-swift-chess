@@ -21,7 +21,7 @@ class ViewModel: ObservableObject {
     var currentTurnColor: ChessColor = .white
     ///needed for en passant
     var pawnMadeTwoMoves: Coordinates? = nil
-    var predictions: [Coordinates?] = []
+    var predictions: [Coordinates] = []
     
     struct Coordinates: Equatable {
         var  row: Int
@@ -72,24 +72,32 @@ class ViewModel: ObservableObject {
             predictions = getValidMoves(position: tappedPosition)
         } else if fromSquare != nil && toSquare == nil {
             toSquare = tappedPosition
-            handleMove(fromPosition: fromSquare!, toPosition: tappedPosition)
+            handleMove()
         }
         
     }
+    func EnemyStandsOnField(position:Coordinates) -> Bool {
+        return board[position.row][position.column] != nil
+    }
     
     
-    func handleMove(fromPosition:Coordinates, toPosition:Coordinates?) -> Void {
-        if moveIsValid(fromPosition: fromPosition, toPosition: toPosition!) {
-            if board[fromPosition.row][fromPosition.column]!.chessPiece == .pawn {
-                pawnMoves(fromSquare: fromPosition, toSquare:  toPosition!)
+    func handleMove() -> Void {
+        guard let fromPosition = fromSquare else {return}
+        guard let toPosition =  toSquare else {return}
+        
+        if moveIsValid(fromPosition: fromPosition, toPosition: toPosition) {
+            
+            guard let selectedPiece = board[fromPosition.row][fromPosition.column] else {return}
+            if selectedPiece.chessPiece == .pawn {
+                pawnMoves(fromSquare: fromPosition, toSquare:  toPosition)
             }else {
                 pawnMadeTwoMoves = nil
             }
             
-            if let piece = board[toPosition!.row][toPosition!.column] {
+            if let piece = board[toPosition.row][toPosition.column] {
                 capturePiece(piece: piece)
             }
-            movePiece(from: fromPosition, to: toPosition!)
+            movePiece(from: fromPosition, to: toPosition)
         }
         
     }
@@ -135,9 +143,8 @@ class ViewModel: ObservableObject {
     }
     
     func getValidMoves(position:Coordinates) -> [Coordinates] {
-         let piece = model.board[position.row][position.column]
+        guard let piece = model.board[position.row][position.column] else {return []}
  
-        
         typealias MoveFunction = (Coordinates) -> [Coordinates]
         
         let getValidMovesForEachTypeOfPieces: [ChessPiece:MoveFunction] = [
@@ -148,7 +155,7 @@ class ViewModel: ObservableObject {
             .pawn: getValidMovesPawn,
             .queen: getValidMovesQueen,
         ]
-            let typeOfPiece = piece!.chessPiece
+        let typeOfPiece = piece.chessPiece
         return getValidMovesForEachTypeOfPieces[typeOfPiece]!(position)
         
 
@@ -182,7 +189,7 @@ class ViewModel: ObservableObject {
     }
     
 
-    func getThreatenedSquaresPawn(position:Coordinates) -> [Coordinates?] {
+    func getThreatenedSquaresPawn(position:Coordinates) -> [Coordinates] {
         let directions = (board[position.row][position.column]?.chessColor == .white) ? [(-1, -1), (-1, 1)] : [(1, -1), (1, 1)]
         return getValidMovesWithDirections(position, directions: directions, maxReach: 1)
     }
