@@ -161,7 +161,7 @@ class ViewModel: ObservableObject {
         
         let pieceColor = getColorsFromCoords(coords: position)
         let (direction, baseRow) = pieceColor == .white ? (-1, 6) : (1, 1)
-   
+        
         if board[position.row + direction][position.column] == nil {
             coordinates.append(Coordinates(row: position.row + direction, column: position.column))
             if position.row == baseRow && board[position.row + direction * 2][position.column] == nil  {
@@ -171,10 +171,16 @@ class ViewModel: ObservableObject {
         
         /// all for en passant
         return coordinates + getThreatenedSquaresPawn(position: position).compactMap { coord -> Coordinates? in
-            guard let coord = coord, board[coord.row][coord.column] != nil || (pawnMadeTwoMoves?.row == coord.row + direction && pawnMadeTwoMoves?.column == coord.column) else { return nil }
-            return coord
+            if let coord = coord {
+                if board[coord.row][coord.column] != nil {
+                    return coord
+                } else if let pawnMadeTwoMoves = pawnMadeTwoMoves,
+                          coord.row == (pawnMadeTwoMoves.row + direction) && coord.column == pawnMadeTwoMoves.column {
+                    return coord
+                }
+            }
+            return nil
         }
-        
     }
     
 
@@ -192,31 +198,31 @@ class ViewModel: ObservableObject {
     
  
     
-    func getValidMovesRook(_ square:Coordinates) -> [Coordinates?] {
+    func getValidMovesRook(_ square:Coordinates) -> [Coordinates] {
         let directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
         return getValidMovesWithDirections(square, directions: directions, maxReach: 7)
     }
-    func getValidMovesBishop(_ square:Coordinates) -> [Coordinates?] {
+    func getValidMovesBishop(_ square:Coordinates) -> [Coordinates] {
         let directions = [(1, 1), (1, -1), (-1, 1), (-1, -1)]
         return getValidMovesWithDirections(square, directions: directions, maxReach: 7)
     }
-    func getValidMovesKnight(_ square:Coordinates) -> [Coordinates?] {
+    func getValidMovesKnight(_ square:Coordinates) -> [Coordinates] {
         let directions = [(-1, -2), (-2, -1), (-2, 1), (-1, 2),  (1, 2), (2, 1), (2, -1), (1, -2)]
         return getValidMovesWithDirections(square, directions: directions, maxReach: 1)
     }
     
-    func getValidMovesQueen(_ square: Coordinates) -> [Coordinates?] {
+    func getValidMovesQueen(_ square: Coordinates) -> [Coordinates] {
         let directions = [(0, 1), (1, 0), (0, -1), (-1, 0),(1, 1), (1, -1), (-1, 1), (-1, -1)]
         return getValidMovesWithDirections(square, directions: directions, maxReach: 7)
     }
-    func getValidMovesKing(_ square:Coordinates) -> [Coordinates?] {
+    func getValidMovesKing(_ square:Coordinates) -> [Coordinates] {
         let directions = [(0, 1), (1, 0), (0, -1), (-1, 0),(1, 1), (1, -1), (-1, 1), (-1, -1)]
         return getValidMovesWithDirections(square, directions: directions, maxReach: 1)
     }
     
     
-    func getValidMovesWithDirections(_ square: Coordinates, directions: [(Int,Int)], maxReach: Int) -> [Coordinates?] {
-        var validMoves: [Coordinates?] = []
+    func getValidMovesWithDirections(_ square: Coordinates, directions: [(Int,Int)], maxReach: Int) -> [Coordinates] {
+        var validMoves: [Coordinates] = []
         let movingPiece = board[square.row][square.column]
         
         for direction in directions {
