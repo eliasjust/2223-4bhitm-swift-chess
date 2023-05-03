@@ -127,17 +127,15 @@ class ViewModel: ObservableObject {
 
     
     func moveIsValid(fromPosition:Coordinates, toPosition:Coordinates) -> Bool {
-        return getValidMoves(position: fromPosition).contains(where: {$0!.column == toPosition.column && $0!.row == toPosition.row})
+        return getValidMoves(position: fromPosition).contains(where: {$0.column == toPosition.column && $0.row == toPosition.row})
         
     }
     
-    func getValidMoves(position:Coordinates) -> [Coordinates?] {
+    func getValidMoves(position:Coordinates) -> [Coordinates] {
          let piece = model.board[position.row][position.column]
-        if piece == nil {
-            return [toSquare]
-        } else {
+ 
         
-        typealias MoveFunction = (Coordinates) -> [Coordinates?]
+        typealias MoveFunction = (Coordinates) -> [Coordinates]
         
         let getValidMovesForEachTypeOfPieces: [ChessPiece:MoveFunction] = [
             .bishop: getValidMovesBishop,
@@ -148,16 +146,15 @@ class ViewModel: ObservableObject {
             .queen: getValidMovesQueen,
         ]
             let typeOfPiece = piece!.chessPiece
-            guard let moveHandler = getValidMovesForEachTypeOfPieces[typeOfPiece] else { return [toSquare] }
-            return moveHandler(position)
-        }
+        return getValidMovesForEachTypeOfPieces[typeOfPiece]!(position)
+        
 
         
     }
 
     
-    func getValidMovesPawn(position:Coordinates) -> [Coordinates?] {
-        var coordinates: [Coordinates?] = [Coordinates]()
+    func getValidMovesPawn(position:Coordinates) -> [Coordinates] {
+        var coordinates: [Coordinates] = [Coordinates]()
         
         let pieceColor = getColorsFromCoords(coords: position)
         let (direction, baseRow) = pieceColor == .white ? (-1, 6) : (1, 1)
@@ -170,16 +167,14 @@ class ViewModel: ObservableObject {
         }
         
         /// all for en passant
-        return coordinates + getThreatenedSquaresPawn(position: position).compactMap { coord -> Coordinates? in
-            if let coord = coord {
-                if board[coord.row][coord.column] != nil {
-                    return coord
-                } else if let pawnMadeTwoMoves = pawnMadeTwoMoves,
-                          coord.row == (pawnMadeTwoMoves.row + direction) && coord.column == pawnMadeTwoMoves.column {
-                    return coord
-                }
+        return coordinates + getThreatenedSquaresPawn(position: position).compactMap { $0 }.filter { coord -> Bool in
+            if board[coord.row][coord.column] != nil {
+                return true
+            } else if let pawnMadeTwoMoves = pawnMadeTwoMoves,
+                      coord.row == (pawnMadeTwoMoves.row + direction) && coord.column == pawnMadeTwoMoves.column {
+                return true
             }
-            return nil
+            return false
         }
     }
     
