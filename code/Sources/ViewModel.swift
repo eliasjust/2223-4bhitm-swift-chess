@@ -38,16 +38,8 @@ class ViewModel: ObservableObject {
         return Coordinates(row: row, column: column)
     }
     
-    func checkIfAreaIsTapped() -> Bool {
-        return fromSquare != nil
-    }
-    func checkIfPiecesShouldBeDrawnAgain() -> Bool {
-        return fromSquare != nil && toSquare != nil
-    }
-    func clearTapSetting() {
-        fromSquare = nil
-        toSquare = nil
-    }
+   
+ 
     
     
     
@@ -76,7 +68,7 @@ class ViewModel: ObservableObject {
         }
         
     }
-    func EnemyStandsOnField(position:Coordinates) -> Bool {
+    func EnemyStandsOnField(_ position:Coordinates) -> Bool {
         return board[position.row][position.column] != nil
     }
     
@@ -95,7 +87,7 @@ class ViewModel: ObservableObject {
             }
             
             if let piece = board[toPosition.row][toPosition.column] {
-                capturePiece(piece: piece)
+                capturePiece(piece)
             }
             movePiece(from: fromPosition, to: toPosition)
         }
@@ -108,7 +100,7 @@ class ViewModel: ObservableObject {
         currentTurnColor = (currentTurnColor == .white) ? .black : .white
     }
     
-    func capturePiece(piece:Piece) -> Void {
+    func capturePiece(_ piece:Piece) -> Void {
         return
     }
     
@@ -131,9 +123,9 @@ class ViewModel: ObservableObject {
     }
     
     func captureEnPasant(square:Coordinates) -> Void {
-        let piece = board[square.row][square.column]
+        guard  let piece = board[square.row][square.column] else {return}
         model.board[square.row][square.column] = nil
-        capturePiece(piece: piece!)
+        capturePiece(piece)
     }
 
     
@@ -166,7 +158,7 @@ class ViewModel: ObservableObject {
     func getValidMovesPawn(position:Coordinates) -> [Coordinates] {
         var coordinates: [Coordinates] = [Coordinates]()
         
-        let pieceColor = getColorsFromCoords(coords: position)
+        let pieceColor = getColorsFromCoords(position)
         let (direction, baseRow) = pieceColor == .white ? (-1, 6) : (1, 1)
         
         if board[position.row + direction][position.column] == nil {
@@ -196,9 +188,9 @@ class ViewModel: ObservableObject {
     
     
     
-    func transformPawn(square:Coordinates?) -> Void {
-        let piece =  Piece(chessPiece: .queen, chessColor: getColorsFromCoords(coords: square!))
-        model.board[square!.row][square!.column] = piece
+    func transformPawn(square:Coordinates) -> Void {
+        let piece =  Piece(chessPiece: .queen, chessColor: getColorsFromCoords(square))
+        model.board[square.row][square.column] = piece
     }
     
  
@@ -228,13 +220,13 @@ class ViewModel: ObservableObject {
     
     func getValidMovesWithDirections(_ square: Coordinates, directions: [(Int,Int)], maxReach: Int) -> [Coordinates] {
         var validMoves: [Coordinates] = []
-        let movingPiece = board[square.row][square.column]
+        guard let movingPiece = board[square.row][square.column]  else {return validMoves}
         
         for direction in directions {
             var count = 0
             var newCoord = Coordinates(row: square.row + direction.0, column: square.column + direction.1)
             
-            while isValidCoordinate(cord: newCoord, color: movingPiece!.chessColor) && count < maxReach {
+            while isValidCoordinate(cord: newCoord, color: movingPiece.chessColor) && count < maxReach {
                 validMoves.append(newCoord)
                 
                 if board[newCoord.row][newCoord.column] != nil {break}
@@ -252,7 +244,7 @@ class ViewModel: ObservableObject {
         return cord.row >= 0 && cord.row < 8 && cord.column >= 0 && cord.column < 8 && color != board[cord.row][cord.column]?.chessColor
     }
     
-    func getColorsFromCoords(coords:Coordinates) -> ChessColor {
+    func getColorsFromCoords(_ coords:Coordinates) -> ChessColor {
         board[coords.row][coords.column]!.chessColor
     }
     

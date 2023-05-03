@@ -31,30 +31,30 @@ class BoardView: UIView {
         
         for (i, row) in viewmodel.board.enumerated() {
             for (j, piece) in row.enumerated() {
-                if  piece != nil {
-                    subviews[i].subviews[j].subviews.forEach{$0.removeFromSuperview()}
-                    let pieceView = createPieceLayer(piece: piece!.chessPiece, color: piece!.chessColor)
-                    subviews[i].subviews[j].addSubview(pieceView)
-                    
-                }
+                guard let validPiece = piece else {continue}
+                
+                let pieceView = createPieceLayer(piece: validPiece.chessPiece, color: validPiece.chessColor)
+                subviews[i].subviews[j].addSubview(pieceView)
+                
             }
         }
     }
     
+    
     func createPredictionCircle(_ coordinates:ViewModel.Coordinates) -> UIView {
         
-        let enemyStandsOnField =  viewmodel.EnemyStandsOnField(position: coordinates)
+        let enemyStandsOnField =  viewmodel.EnemyStandsOnField(coordinates)
         
         
         let center = CGPoint(x: squareSize / 2 , y: squareSize / 2)
         let radius: CGFloat =  enemyStandsOnField ? squareSize / 2  : squareSize / 4
         let fieldColor = enemyStandsOnField ? UIColor.red.cgColor : activeColor
-
+        
         
         let shapeLayer = CAShapeLayer()
-     
-            let path = UIBezierPath(arcCenter: center, radius: radius, startAngle: 0, endAngle: CGFloat.pi * 2, clockwise: true)
-            shapeLayer.path = path.cgPath
+        
+        let path = UIBezierPath(arcCenter: center, radius: radius, startAngle: 0, endAngle: CGFloat.pi * 2, clockwise: true)
+        shapeLayer.path = path.cgPath
         
         let circleView = UIView(frame: CGRect(x: 0, y:0 , width: radius * 2 , height: radius * 2))
         circleView.center = center
@@ -138,8 +138,8 @@ class BoardView: UIView {
         {
             
             
-            let rowIndex = subviews.firstIndex(of: rowView)!
-            let colIndex = rowView.subviews.firstIndex(of: colView)!
+            guard let rowIndex = subviews.firstIndex(of: rowView) else {return}
+            guard let colIndex = rowView.subviews.firstIndex(of: colView) else {return}
             
             viewmodel.handleTap(tappedPosition: ViewModel.Coordinates(row: rowIndex, column: colIndex))
             
