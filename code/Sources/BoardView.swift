@@ -20,9 +20,8 @@ class BoardView: UIView {
     let whiteColor = UIColor.lightGray.cgColor
     let blackColor = UIColor.darkGray.cgColor
     let activeColor = UIColor.yellow.cgColor
-    var activeLayerCoordinates:ViewModel.Coordinates? {viewmodel.fromSquare}
-    var activeLayerColor:UIColor? = nil
-    var predectionCoordinatesOnFields:[ViewModel.Coordinates] = []
+    
+    
     
     
     required init?(coder: NSCoder) {
@@ -34,7 +33,7 @@ class BoardView: UIView {
             for (j, piece) in row.enumerated() {
                 if  piece != nil {
                     subviews[i].subviews[j].subviews.forEach{$0.removeFromSuperview()}
-                    let pieceView = createPieceLayer(piece: piece?.chessPiece, color: piece?.chessColor)
+                    let pieceView = createPieceLayer(piece: piece!.chessPiece, color: piece!.chessColor)
                     subviews[i].subviews[j].addSubview(pieceView)
                     
                 }
@@ -42,40 +41,34 @@ class BoardView: UIView {
         }
     }
     
-    
+    func createPredictionCircle() -> UIView {
+        
+        
+        let center = CGPoint(x: squareSize / 2 , y: squareSize / 2)
+        let radius: CGFloat = squareSize / 4
+
+       
+        let path = UIBezierPath(arcCenter: center, radius: radius, startAngle: 0, endAngle: CGFloat.pi * 2, clockwise: true)
+
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.path = path.cgPath
+        shapeLayer.fillColor = UIColor.clear.cgColor
+        shapeLayer.strokeColor = UIColor.blue.cgColor
+        shapeLayer.lineWidth = 2
+     
+        
+        let circleView = UIView(frame: CGRect(x: 0, y:0 , width: radius * 2 , height: radius * 2))
+        circleView.center = center
+        circleView.backgroundColor =
+        UIColor(cgColor:activeColor).withAlphaComponent(0.3)
+        circleView.layer.cornerRadius = radius
+        return circleView
+        
+        
+    }
     
     fileprivate func drawPredictions() {
-       
-      
-        
-        for predection in viewmodel.predictions {
-            
-           
-            
-            let center = CGPoint(x: squareSize / 2 , y: squareSize / 2)
-            let radius: CGFloat = squareSize / 4
-
-           
-            let path = UIBezierPath(arcCenter: center, radius: radius, startAngle: 0, endAngle: CGFloat.pi * 2, clockwise: true)
-
-            let shapeLayer = CAShapeLayer()
-            shapeLayer.path = path.cgPath
-            shapeLayer.fillColor = UIColor.clear.cgColor
-            shapeLayer.strokeColor = UIColor.blue.cgColor
-            shapeLayer.lineWidth = 2
-         
-            
-            let circleView = UIView(frame: CGRect(x: 0, y:0 , width: radius * 2 , height: radius * 2))
-            circleView.center = center
-            circleView.backgroundColor = UIColor.yellow
-            circleView.layer.cornerRadius = radius
-            let row = predection!.row
-            let column = predection!.column
-            predectionCoordinatesOnFields.append(ViewModel.Coordinates(row: row, column:column))
-            subviews[row].subviews[column].addSubview(circleView)
-        
-        
-        }
+        viewmodel.predictions.forEach{subviews[$0!.row].subviews[$0!.column].addSubview(createPredictionCircle())}
     }
     
     
@@ -83,44 +76,13 @@ class BoardView: UIView {
     
 
     
-    func createPieceLayer(piece: Model.ChessPiece?, color: Model.ChessColor?) -> UIView {
+    func createPieceLayer(piece: Model.ChessPiece, color: Model.ChessColor) -> UIView {
         let pieceView = UIView()
         
         pieceView.layer.frame = CGRect(x:0,y:0,width:squareSize,height: squareSize)
        
         
-        let imageName: String
-        
-      
-        switch (piece, color) {
-        case (.king, .white):
-            imageName = "white_king"
-        case (.rook, .white):
-            imageName = "white_rook"
-        case (.pawn, .white):
-            imageName = "white_pawn"
-        case (.bishop, .white):
-            imageName = "white_bishop"
-        case (.knight, .white):
-            imageName = "white_knight"
-        case (.queen, .white):
-            imageName = "white_queen"
-        case (.king, .black):
-            imageName = "black_king"
-        case (.rook, .black):
-            imageName = "black_rook"
-        case (.pawn, .black):
-            imageName = "black_pawn"
-        case (.knight, .black):
-            imageName = "black_knight"
-        case (.bishop, .black):
-            imageName = "black_bishop"
-        case (.queen, .black):
-            imageName = "black_queen"
-        default:
-            imageName = ""
-        }
-        
+        let imageName:String = "\(color.rawValue)_\(piece.rawValue)"
         if let image = UIImage(named: imageName) {
             pieceView.layer.contents = image.cgImage
         }
@@ -171,14 +133,10 @@ class BoardView: UIView {
         {
             
             
-            let rowIndex = subviews.firstIndex(of: rowView)
-            let colIndex = rowView.subviews.firstIndex(of: colView)
+            let rowIndex = subviews.firstIndex(of: rowView)!
+            let colIndex = rowView.subviews.firstIndex(of: colView)!
             
-            viewmodel.handleTap(tappedPosition: ViewModel.Coordinates(row: rowIndex!, column: colIndex!))
-            
-            
-            
-            
+            viewmodel.handleTap(tappedPosition: ViewModel.Coordinates(row: rowIndex, column: colIndex))
             
             let fromPosition = viewmodel.fromSquare
             let toPosition = viewmodel.toSquare
@@ -194,10 +152,7 @@ class BoardView: UIView {
                     colView.backgroundColor = UIColor(cgColor:activeColor)
                     
                 }
-            } else {
-                
             }
-            
             
             
             
@@ -215,7 +170,7 @@ class BoardView: UIView {
         subviews.forEach{$0.removeFromSuperview()}
         drawBoard()
         drawPieces()
-        drawPredictions()
+       
         
         
     }
