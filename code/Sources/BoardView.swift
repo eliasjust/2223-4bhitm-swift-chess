@@ -43,7 +43,7 @@ class BoardView: UIView {
     
     func createPredictionCircle(_ coordinates:ViewModel.Coordinates) -> UIView {
         
-        let enemyStandsOnField =  viewmodel.EnemyStandsOnField(coordinates)
+        let enemyStandsOnField =  viewmodel.enemyStandsOnSquare(coordinates)
         
         
         let center = CGPoint(x: squareSize / 2 , y: squareSize / 2)

@@ -12,6 +12,13 @@ struct Model {
     typealias BoardClass = [[Piece?]]
     var board: BoardClass
     
+    var a8blackRookHasMoved: Bool = false
+    var h8blackRookHasMoved: Bool = false
+    var a1whiteRookHasMoved: Bool = false
+    var h1whiteRookHasMoved: Bool = false
+    var whiteKingHasMoved: Bool = false
+    var blackKingHasMoved: Bool = false
+    
     enum ChessPiece: String {
         case king
         case queen
@@ -27,7 +34,8 @@ struct Model {
     
     
     init() {
-        
+        //is going to be replaced by GBR-Code or VEN
+
         func createPieces(_ type:ChessPiece) -> (Piece, Piece) {
             return (Piece(chessPiece: type, chessColor: .black),
                     Piece(chessPiece: type, chessColor: .white))
@@ -58,5 +66,8 @@ struct Model {
         var chessPiece: ChessPiece
         var chessColor: ChessColor
     }
+    
+
+
 }
 
