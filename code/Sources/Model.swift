@@ -28,7 +28,7 @@ struct Model {
         case pawn
     }
     
-    enum ChessColor:String {
+    enum ChessColor: String {
         case black, white
     }
     
@@ -62,7 +62,7 @@ struct Model {
         ]
     }
     
-    struct Piece {
+    struct Piece: Equatable {
         var chessPiece: ChessPiece
         var chessColor: ChessColor
     }
