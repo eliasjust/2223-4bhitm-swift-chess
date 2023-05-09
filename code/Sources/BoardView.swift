@@ -138,8 +138,12 @@ class BoardView: UIView {
         {
             
             
-            guard let rowIndex = subviews.firstIndex(of: rowView) else {return}
-            guard let colIndex = rowView.subviews.firstIndex(of: colView) else {return}
+            guard let rowIndex = subviews.firstIndex(of: rowView) else {
+                print ("The touched Row is not accessable ")
+                return}
+            guard let colIndex = rowView.subviews.firstIndex(of: colView) else {
+                print ("The touched Column is not accessable ")
+                return}
             
             viewmodel.handleTap(tappedPosition: ViewModel.Coordinates(row: rowIndex, column: colIndex))
             

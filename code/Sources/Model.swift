@@ -9,6 +9,10 @@ import Foundation
 
 struct Model {
     
+    
+    var blackBeatenPieces: [Piece]  =  []
+    var whiteBeatenPieces:  [Piece] = []
+    
     typealias BoardClass = [[Piece?]]
     var board: BoardClass
     
@@ -35,7 +39,7 @@ struct Model {
     
     init() {
         //is going to be replaced by GBR-Code or VEN
-
+        
         func createPieces(_ type:ChessPiece) -> (Piece, Piece) {
             return (Piece(chessPiece: type, chessColor: .black),
                     Piece(chessPiece: type, chessColor: .white))
@@ -62,12 +66,12 @@ struct Model {
         ]
     }
     
-    struct Piece: Equatable {
+    struct Piece: Equatable,Hashable {
         var chessPiece: ChessPiece
         var chessColor: ChessColor
     }
     
-
-
+    
+    
 }
 

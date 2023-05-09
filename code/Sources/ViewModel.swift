@@ -18,6 +18,13 @@ class ViewModel: ObservableObject {
     let defaultBlackKingPos = Coordinates(row: 0, column: 4)
     let defaultWhiteKingPos = Coordinates(row: 7, column: 4)
     
+    var whiteBeatenPieces: [Piece] {
+        model.whiteBeatenPieces
+    }
+    var  blackBeatenPieces: [Piece] {
+        model.blackBeatenPieces
+    }
+    
     
     typealias BoardClass = [[Piece?]]
     
@@ -139,6 +146,14 @@ class ViewModel: ObservableObject {
     }
     
     func capturePiece(_ piece:Piece) -> Void {
+        if piece.chessColor == .white  {
+            model.whiteBeatenPieces.append( piece)
+        } else {
+            model.blackBeatenPieces.append(piece)
+        }
+        
+        print(" Count of the beaten pieces white  \(model.whiteBeatenPieces.count)")
+        print (" Count of the black beaten pieces black \(model.blackBeatenPieces.count)")
         return
     }
     
@@ -161,6 +176,8 @@ class ViewModel: ObservableObject {
     
     func captureEnPasant(square:Coordinates) -> Void {
         guard  let piece = board[square.row][square.column] else {return}
+        
+
         model.board[square.row][square.column] = nil
         capturePiece(piece)
     }
