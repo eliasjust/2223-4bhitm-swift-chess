@@ -23,6 +23,9 @@ struct Model {
     var whiteKingHasMoved: Bool = false
     var blackKingHasMoved: Bool = false
     
+    var isDraw: Bool = false
+    var isCheckMate: ChessColor?
+    
     enum ChessPiece: String {
         case king
         case queen
