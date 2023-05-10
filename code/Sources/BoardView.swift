@@ -13,6 +13,8 @@ import SwiftUI
 
 class BoardView: UIView {
     
+   var fromSquare: ViewModel.Coordinates? = nil
+   var squarePreviousColor: UIColor?
     var viewmodel: ViewModel
     
     let boardSize: CGFloat = UIScreen.main.bounds.width * 0.9
@@ -67,8 +69,8 @@ class BoardView: UIView {
         
     }
     
-    fileprivate func drawPredictions() {
-        viewmodel.predictions
+    fileprivate func drawPredictions(_ predictions: [ViewModel.Coordinates] ) {
+       predictions
             .forEach{
                 subviews[$0.row].subviews[$0.column]
                     .addSubview(createPredictionCircle($0))
@@ -144,24 +146,55 @@ class BoardView: UIView {
             guard let colIndex = rowView.subviews.firstIndex(of: colView) else {
                 print ("The touched Column is not accessable ")
                 return}
+          
             
-            viewmodel.handleTap(tappedPosition: ViewModel.Coordinates(row: rowIndex, column: colIndex))
+            let tappedAreaCoordinates = viewmodel.setCoordinates(row: rowIndex, column: colIndex)
             
-            let fromPosition = viewmodel.fromSquare
-            let toPosition = viewmodel.toSquare
-            if fromPosition != nil {
-                drawPredictions()
-                if toPosition != nil {
-                    
-                    self.setNeedsDisplay()
-                    self.viewmodel.clearValues()
-                    
-                } else {
-                    
-                    colView.backgroundColor = UIColor(cgColor:activeColor)
-                    
-                }
+            let pieceAtTappedArea = viewmodel.checkIfPieceOnTheGivenCoordinatesIsValid(tappedAreaCoordinates)
+            
+            if !pieceAtTappedArea && fromSquare == nil { return}
+            if fromSquare == nil {
+                
+                print("Assigning FromSquare")
+                fromSquare = tappedAreaCoordinates
+                drawPredictions(viewmodel.getValidMoves(position: fromSquare!))
+                squarePreviousColor = colView.backgroundColor
+                colView.backgroundColor = UIColor(cgColor: activeColor)
+                
+               
             }
+            
+            
+            else if tappedAreaCoordinates == fromSquare {
+                print("Deselecting a piece")
+                fromSquare = nil
+                setNeedsDisplay()
+            }
+            
+            
+            
+            else if pieceAtTappedArea && fromSquare != nil  {
+                
+                print("Changing the FromSquare Position")
+                fromSquare = tappedAreaCoordinates
+                setNeedsDisplay()
+                //subviews[fromSquare!.row].subviews[fromSquare!.column].backgroundColor = squarePreviousColor
+                
+                
+                
+            }
+            
+            
+            else  {
+                
+                    print("Moving piece to \(tappedAreaCoordinates)")
+                    viewmodel.handleMove(fromPosition: fromSquare!, toPosition: tappedAreaCoordinates)
+                    
+                fromSquare = nil
+                self.setNeedsDisplay()
+            }
+            
+            
             
             
             
@@ -179,6 +212,11 @@ class BoardView: UIView {
         subviews.forEach{$0.removeFromSuperview()}
         drawBoard()
         drawPieces()
+        if fromSquare != nil {
+            subviews[fromSquare!.row].subviews[fromSquare!.column].backgroundColor = UIColor(cgColor: activeColor)
+            drawPredictions(viewmodel.getValidMoves(position: fromSquare!))
+        
+        }
         
         
         

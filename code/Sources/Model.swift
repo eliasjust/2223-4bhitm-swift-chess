@@ -12,7 +12,7 @@ struct Model {
     
     var blackBeatenPieces: [Piece]  =  []
     var whiteBeatenPieces:  [Piece] = []
-    
+    var currentTurnColor:ChessColor  = .white
     typealias BoardClass = [[Piece?]]
     var board: BoardClass
     
