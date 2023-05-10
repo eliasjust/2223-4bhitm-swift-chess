@@ -13,8 +13,8 @@ import SwiftUI
 
 class BoardView: UIView {
     
-   var fromSquare: ViewModel.Coordinates? = nil
-   var squarePreviousColor: UIColor?
+    var fromSquare: ViewModel.Coordinates? = nil
+    var squarePreviousColor: UIColor?
     var viewmodel: ViewModel
     
     let boardSize: CGFloat = UIScreen.main.bounds.width * 0.9
@@ -70,7 +70,7 @@ class BoardView: UIView {
     }
     
     fileprivate func drawPredictions(_ predictions: [ViewModel.Coordinates] ) {
-       predictions
+        predictions
             .forEach{
                 subviews[$0.row].subviews[$0.column]
                     .addSubview(createPredictionCircle($0))
@@ -146,7 +146,7 @@ class BoardView: UIView {
             guard let colIndex = rowView.subviews.firstIndex(of: colView) else {
                 print ("The touched Column is not accessable ")
                 return}
-          
+            
             
             let tappedAreaCoordinates = viewmodel.setCoordinates(row: rowIndex, column: colIndex)
             
@@ -161,7 +161,7 @@ class BoardView: UIView {
                 squarePreviousColor = colView.backgroundColor
                 colView.backgroundColor = UIColor(cgColor: activeColor)
                 
-               
+                
             }
             
             
@@ -187,9 +187,9 @@ class BoardView: UIView {
             
             else  {
                 
-                    print("Moving piece to \(tappedAreaCoordinates)")
-                    viewmodel.handleMove(fromPosition: fromSquare!, toPosition: tappedAreaCoordinates)
-                    
+                print("Moving piece to \(tappedAreaCoordinates)")
+                viewmodel.handleMove(fromPosition: fromSquare!, toPosition: tappedAreaCoordinates)
+                
                 fromSquare = nil
                 self.setNeedsDisplay()
             }
@@ -215,7 +215,7 @@ class BoardView: UIView {
         if fromSquare != nil {
             subviews[fromSquare!.row].subviews[fromSquare!.column].backgroundColor = UIColor(cgColor: activeColor)
             drawPredictions(viewmodel.getValidMoves(position: fromSquare!))
-        
+            
         }
         
         
@@ -229,9 +229,9 @@ class BoardView: UIView {
     
     
     func highlightCheck (color: ViewModel.ChessColor) -> Void{
-       let position = viewmodel.findKing(color, viewmodel.board)
+        let position = viewmodel.findKing(color, viewmodel.board)
         if viewmodel.isKingInCheck(square: position, viewmodel.board) {
-        subviews[position.row].subviews[position.column].backgroundColor = UIColor.red
+            subviews[position.row].subviews[position.column].backgroundColor = UIColor.red
         }
     }
     

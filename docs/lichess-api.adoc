@@ -19,3 +19,4 @@ Abdulrahman Al Sabagh & Elias Just <author@asciidoctor.org>
 - Wettbewerbe
 - Einbindung von Schachstudien
 
+

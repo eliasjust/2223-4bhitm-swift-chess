@@ -42,3 +42,21 @@ https://xd.adobe.com/view/695a6e9d-72ae-409d-8226-fe39be7ad7df-3c09/[clickdummy]
 
 - fix double tab
 - fix en passant capture
+
+
+== Sprint Review
+* strategy pattern
+* command pattern
+* https://en.wikipedia.org/wiki/Strategy_pattern
+* https://en.wikipedia.org/wiki/Command_pattern
+
+- refactoring
+
+
+- rotate board
+
+- improve design
+- new game button
+
+- Remis
+- Selection for pawn promotion
