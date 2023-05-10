@@ -13,15 +13,30 @@ struct ContentView: View {
     let boardHeight =  UIScreen.main.bounds.height * 0.8
     var body: some View {
       
+        ZStack {
         VStack {
          
             BeatenPieces(pieces: viewmodel.blackBeatenPieces).frame(height: hStacksHeight)
             BoardViewWrapper(viewmodel: viewmodel).frame(height: boardHeight)
             BeatenPieces(pieces: viewmodel.whiteBeatenPieces).frame(height: hStacksHeight)
             
-        }.padding()
+            
+        }.padding().blur(radius: !viewmodel.gameIsEnded ? 10 : 0)
+            viewForGameOver()
+        }
         
-        
+       
+    }
+    @ViewBuilder
+    func viewForGameOver() -> some View {
+        if viewmodel.gameIsEnded {
+            ZStack {
+                Text(viewmodel.whiteIsCheckMate ? "Black is winner" : (viewmodel.blackIsCheckMate ?  "White is Winner" : ""))
+                    .font(Font.largeTitle)
+                    .bold()
+                    
+            }
+        }
     }
 }
 
@@ -44,6 +59,8 @@ struct BoardViewWrapper: UIViewRepresentable {
 struct BeatenPieces: View {
     var pieces: [ViewModel.Piece]
     var body : some View  {
+        
+
         HStack(spacing:0) {
             ForEach(pieces, id: \.self) { piece in
              
