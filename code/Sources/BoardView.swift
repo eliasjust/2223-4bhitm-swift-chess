@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 import SwiftUI
-
+ 
 
 
 class BoardView: UIView {
@@ -197,7 +197,6 @@ class BoardView: UIView {
             
             
             
-            
         } else {
             print(sender.view?.bounds.maxY ?? "sender view does not exist")
             print(sender.view?.superview ??  "super view does not exist")
@@ -205,6 +204,8 @@ class BoardView: UIView {
         }
         
     }
+    
+    
     
     
     override func draw(_ rect:CGRect) {

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @ObservedObject var viewmodel : ViewModel
+    @State private var rotationAngle: Angle = .zero
     var hStacksHeight = UIScreen.main.bounds.height * 0.1
     let boardHeight =  UIScreen.main.bounds.height * 0.8
     var body: some View {
@@ -17,7 +18,7 @@ struct ContentView: View {
         VStack {
          
             BeatenPieces(pieces: viewmodel.blackBeatenPieces).frame(height: hStacksHeight)
-            BoardViewWrapper(viewmodel: viewmodel).frame(height: boardHeight)
+            ChessBoardViewControllerWrapper(viewmodel: viewmodel).frame(height: boardHeight)
             BeatenPieces(pieces: viewmodel.whiteBeatenPieces).frame(height: hStacksHeight)
             
             
@@ -26,7 +27,8 @@ struct ContentView: View {
         }
         
        
-    }
+    };
+        
     @ViewBuilder
     func viewForGameOver() -> some View {
         if viewmodel.gameIsEnded{
@@ -91,10 +93,74 @@ struct BeatenPieces: View {
 
 
 
+class BoardViewController: UIViewController {
+    var chessboardView : BoardView
+    var viewmodel: ViewModel
+     init(viewmodel:ViewModel) {
+        chessboardView =  BoardView(viewModel: viewmodel)
+        self.viewmodel = viewmodel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    
+   
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.addSubview(chessboardView)
+        
+        NotificationCenter.default.addObserver(self,selector: #selector(handleDeviceRotation(_:)), name: UIDevice.orientationDidChangeNotification, object: nil)
+       
+    
+        
+       
+    }
+    
+    @objc private func handleDeviceRotation(_ gesture: UIRotationGestureRecognizer) {
+        let deviceOrientation = UIDevice.current.orientation
+        
+        let rotationAngleForEachOrientation: Dictionary<UIDeviceOrientation, CGFloat> = [
+            .portrait:CGFloat.zero,
+            .landscapeLeft: CGFloat.pi / 2,
+            .landscapeRight: CGFloat.pi / -2,
+            
+                .portraitUpsideDown: CGFloat.pi
+        ]
+        let angle = rotationAngleForEachOrientation[deviceOrientation] ?? CGFloat.zero
+        view.transform = CGAffineTransform(rotationAngle: angle )
+    }
+    
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
+    }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        chessboardView.frame = view.bounds
+    }
+  
+    
+    
+   
+}
 
 
-
-
+struct ChessBoardViewControllerWrapper: UIViewControllerRepresentable {
+    var viewmodel: ViewModel
+    func makeUIViewController(context: Context) -> some UIViewController {
+        BoardViewController(viewmodel: viewmodel)
+    }
+    
+    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
+        
+    }
+}
 
 
 
