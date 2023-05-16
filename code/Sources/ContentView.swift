@@ -21,21 +21,24 @@ struct ContentView: View {
             BeatenPieces(pieces: viewmodel.whiteBeatenPieces).frame(height: hStacksHeight)
             
             
-        }.padding().blur(radius: !viewmodel.gameIsEnded ? 10 : 0)
-            viewForGameOver()
+        }.padding().blur(radius: viewmodel.gameIsEnded ? 10 : 0)
+        viewForGameOver()
         }
         
        
     }
     @ViewBuilder
     func viewForGameOver() -> some View {
-        if viewmodel.gameIsEnded {
-            ZStack {
-                Text(viewmodel.whiteIsCheckMate ? "Black is winner" : (viewmodel.blackIsCheckMate ?  "White is Winner" : ""))
-                    .font(Font.largeTitle)
-                    .bold()
-                    
-            }
+        if viewmodel.gameIsEnded{
+                VStack {
+                    Text(viewmodel.whiteIsCheckMate ? "Black is Winner" : (viewmodel.blackIsCheckMate ?  "White is Winner" : "Its a Draw"))
+                        .font(Font.largeTitle)
+                        .bold()
+        
+                    Button("Restart Game", action: viewmodel.restartGame).padding().buttonStyle(.bordered).font(Font.title)
+                }
+               
+            
         }
     }
 }

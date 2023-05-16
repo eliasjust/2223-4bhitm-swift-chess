@@ -35,7 +35,7 @@ class ViewModel: ObservableObject {
     
     
     var gameIsEnded:Bool {
-        model.isCheckMate == nil && model.isDraw == false
+        model.isCheckMate != nil || model.isDraw == true
     }
     
     
@@ -471,6 +471,12 @@ class ViewModel: ObservableObject {
         
         return validSquares
         
+    }
+    
+    func restartGame() -> Void {
+        model = Model()
+        currentTurnColor = .white
+        pawnMadeTwoMovesSquare = nil
     }
     
     
