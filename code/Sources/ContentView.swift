@@ -23,7 +23,7 @@ struct ContentView: View {
             
             
         }.padding().blur(radius: viewmodel.gameIsEnded ? 10 : 0)
-            viewForGameOver().padding().background(.yellow)       }
+            viewForGameOver().background(.bar).cornerRadius(20).padding()      }
         
        
     };
