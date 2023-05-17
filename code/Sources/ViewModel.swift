@@ -15,13 +15,14 @@ class ViewModel: ObservableObject {
     typealias Piece = Model.Piece
     typealias ChessColor = Model.ChessColor
     typealias ChessPiece = Model.ChessPiece
+    typealias Coordinates = Model.Coordinates
     let defaultBlackKingPos = Coordinates(row: 0, column: 4)
     let defaultWhiteKingPos = Coordinates(row: 7, column: 4)
     
     var whiteBeatenPieces: [Piece] {
         model.whiteBeatenPieces
     }
-    var  blackBeatenPieces: [Piece] {
+    var blackBeatenPieces: [Piece] {
         model.blackBeatenPieces
     }
     
@@ -39,6 +40,10 @@ class ViewModel: ObservableObject {
     }
     
     
+    var pawnPromotes:Coordinates? {
+        model.pawnPromotes
+    }
+    
     typealias BoardClass = [[Piece?]]
     
     var board: BoardClass {
@@ -49,11 +54,7 @@ class ViewModel: ObservableObject {
     ///needed for en passant
     var pawnMadeTwoMovesSquare: Coordinates? = nil
     
-    
-    struct Coordinates: Equatable {
-        var  row: Int
-        var column: Int
-    }
+ 
   
     
     func setCoordinates (row: Int, column: Int) -> Coordinates {
@@ -76,7 +77,7 @@ class ViewModel: ObservableObject {
             case .rook, .king:
                 rookOrKingMoved(from: fromPosition, to: toPosition, chessPiece: selectedPiece.chessPiece)
             case .pawn:
-                pawnMoves(fromSquare: fromPosition, toSquare:  toPosition)
+                pawnWillMove(fromSquare: fromPosition, toSquare:  toPosition)
             default:
                 pawnMadeTwoMovesSquare = nil
             }
@@ -86,7 +87,13 @@ class ViewModel: ObservableObject {
                 capturePiece(piece)
             }
             movePiece(from: fromPosition, to: toPosition)
-
+            
+            if selectedPiece.chessPiece == .pawn {
+                pawnMoved(toSquare: toPosition)
+            }
+     
+            
+            
             model.currentTurnColor = model.currentTurnColor == .white ? .black : .white
 
             handleGameStatus(board)
@@ -157,11 +164,8 @@ class ViewModel: ObservableObject {
         return
     }
     
-    func pawnMoves(fromSquare:Coordinates, toSquare:Coordinates ) -> Void {
-        if toSquare.row == 0 || toSquare.row == 7  {
-            transformPawn(square: fromSquare, board)
-        }
-        
+    func pawnWillMove(fromSquare:Coordinates, toSquare:Coordinates ) -> Void {
+    
         if fromSquare.column != toSquare.column && board[toSquare.row][toSquare.column] == nil {
             captureEnPasant(square: pawnMadeTwoMovesSquare!)
         }
@@ -172,6 +176,12 @@ class ViewModel: ObservableObject {
             pawnMadeTwoMovesSquare = toSquare
         }
         
+    }
+    
+    func pawnMoved(toSquare:Coordinates) -> Void {
+        if toSquare.row == 0 || toSquare.row == 7  {
+            promotePawn(square: toSquare, board)
+        }
     }
     
     func captureEnPasant(square:Coordinates) -> Void {
@@ -365,9 +375,18 @@ class ViewModel: ObservableObject {
         return getValidMovesWithDirections(position, directions: directions, maxReach: 1, board)
     }
     
-    func transformPawn(square:Coordinates, _ board: BoardClass) -> Void {
-        let piece =  Piece(chessPiece: .queen, chessColor: getColorsFromCoords(square, board))
-        model.board[square.row][square.column] = piece
+    func promotePawn(square:Coordinates, _ board: BoardClass) -> Void {
+       // let piece =  Piece(chessPiece: .queen, chessColor: getColorsFromCoords(square, board))
+        //model.board[square.row][square.column] = piece
+        model.pawnPromotes = Coordinates(row: square.row, column: square.column)
+    }
+    
+    func promoteSelectedPawn(chosenPiece: ChessPiece){
+        if let pawnPromotes = pawnPromotes {
+            let piece =  Piece(chessPiece: chosenPiece, chessColor: getColorsFromCoords(pawnPromotes, board))
+            model.board[pawnPromotes.row][pawnPromotes.column] = piece
+            model.pawnPromotes = nil
+        }
     }
     
     /// validates that coordinates are on the board and the square there is not a piece with the same color

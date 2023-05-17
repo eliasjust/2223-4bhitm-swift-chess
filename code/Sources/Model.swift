@@ -25,7 +25,7 @@ struct Model {
     
     var isDraw: Bool = false
     var isCheckMate: ChessColor?
-    
+    var pawnPromotes: Coordinates? = nil
     enum ChessPiece: String {
         case king
         case queen
@@ -75,6 +75,10 @@ struct Model {
        
     }
     
+    struct Coordinates: Equatable {
+        var  row: Int
+        var column: Int
+    }
     
     
 }

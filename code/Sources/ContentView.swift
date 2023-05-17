@@ -12,6 +12,8 @@ struct ContentView: View {
     @State private var rotationAngle: Angle = .zero
     var hStacksHeight = UIScreen.main.bounds.height * 0.1
     let boardHeight =  UIScreen.main.bounds.height * 0.8
+    let pawnPromotionOptions: [ViewModel.ChessPiece] = [.queen, .rook, .bishop, .knight]
+    @State private var selectedPromotion: ViewModel.ChessPiece = .queen
     var body: some View {
       
         ZStack {
@@ -23,10 +25,19 @@ struct ContentView: View {
             
             
         }.padding().blur(radius: viewmodel.gameIsEnded ? 10 : 0)
-            viewForGameOver().background(.bar).cornerRadius(20).padding()      }
+            viewForGameOver().background(.bar).cornerRadius(20).padding()
+            
+            
+            if let _ = viewmodel.pawnPromotes {
+                  pawnPromotionView()
+              }
+
+        }
         
        
     };
+        
+        
         
     @ViewBuilder
     func viewForGameOver() -> some View {
@@ -43,6 +54,37 @@ struct ContentView: View {
             
         }
     }
+    
+    
+    @ViewBuilder
+    func pawnPromotionView() -> some View {
+        VStack {
+            Text("Choose Promotion")
+                .font(Font.largeTitle)
+                .bold()
+
+            Picker("Promotion", selection: $selectedPromotion) {
+                ForEach(pawnPromotionOptions, id: \.self) { option in
+                    Text(option.rawValue.capitalized)
+                }
+            }
+            .pickerStyle(.wheel)
+            .frame(width: 200, height: 150)
+            .clipped()
+
+            Button("Confirm", action: {
+                viewmodel.promoteSelectedPawn(chosenPiece: selectedPromotion)
+            })
+            .padding()
+            .buttonStyle(.bordered)
+            .font(Font.title)
+        }
+        .buttonBorderShape(.roundedRectangle)
+        .padding()
+        .background(Color.white)
+        .cornerRadius(20)
+    }
+
 }
 
 
