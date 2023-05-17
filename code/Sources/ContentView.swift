@@ -17,14 +17,13 @@ struct ContentView: View {
         ZStack {
         VStack {
          
-            BeatenPieces(pieces: viewmodel.blackBeatenPieces).frame(height: hStacksHeight)
-            ChessBoardViewControllerWrapper(viewmodel: viewmodel).frame(height: boardHeight)
+            BeatenPieces(pieces: viewmodel.blackBeatenPieces).frame( height: hStacksHeight)
+            ChessBoardViewControllerWrapper(viewmodel: viewmodel)
             BeatenPieces(pieces: viewmodel.whiteBeatenPieces).frame(height: hStacksHeight)
             
             
         }.padding().blur(radius: viewmodel.gameIsEnded ? 10 : 0)
-        viewForGameOver()
-        }
+            viewForGameOver().padding().background(.yellow)       }
         
        
     };
@@ -36,10 +35,11 @@ struct ContentView: View {
                     Text(viewmodel.whiteIsCheckMate ? "Black is Winner" : (viewmodel.blackIsCheckMate ?  "White is Winner" : "Its a Draw"))
                         .font(Font.largeTitle)
                         .bold()
+                    
         
                     Button("Restart Game", action: viewmodel.restartGame).padding().buttonStyle(.bordered).font(Font.title)
-                }
-               
+                }.buttonBorderShape(.roundedRectangle)
+            
             
         }
     }
@@ -63,28 +63,23 @@ struct BoardViewWrapper: UIViewRepresentable {
 
 struct BeatenPieces: View {
     var pieces: [ViewModel.Piece]
+    let imageSize = UIScreen.main.bounds.width  / 10
+
     var body : some View  {
         
-
-        HStack(spacing:0) {
+        ScrollView(.horizontal) {
+            LazyHStack {
             ForEach(pieces, id: \.self) { piece in
-             
-                GeometryReader { geometry in
-                Image(
-                    "\(piece.chessColor.rawValue)_\(piece.chessPiece.rawValue)"
-                    
-                ).resizable()
+                
+                Image("\(piece.chessColor.rawValue)_\(piece.chessPiece.rawValue)")
+                    .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: geometry.size.width  , height: geometry.size.height )
-                }
-                
-                 
-                
-            }.padding(.horizontal,0).background(.yellow)
-            
-            
-            
-            
+                    .frame(width: imageSize)
+                    .id(UUID())
+                    
+            }
+
+        }
         }
     }
     
@@ -115,10 +110,6 @@ class BoardViewController: UIViewController {
         view.addSubview(chessboardView)
         
         NotificationCenter.default.addObserver(self,selector: #selector(handleDeviceRotation(_:)), name: UIDevice.orientationDidChangeNotification, object: nil)
-       
-    
-        
-       
     }
     
     @objc private func handleDeviceRotation(_ gesture: UIRotationGestureRecognizer) {
@@ -138,11 +129,6 @@ class BoardViewController: UIViewController {
     
     deinit {
         NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
-    }
-    
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        chessboardView.frame = view.bounds
     }
   
     

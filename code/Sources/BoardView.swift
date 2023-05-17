@@ -19,9 +19,9 @@ class BoardView: UIView {
     
     let boardSize: CGFloat = UIScreen.main.bounds.width * 0.9
     var squareSize: CGFloat { boardSize  / 8 }
-    let whiteColor = UIColor.lightGray.cgColor
-    let blackColor = UIColor.darkGray.cgColor
-    let activeColor = UIColor.yellow.cgColor
+    let whiteColor = UIColor(red:227/255, green:193/255, blue: 111/255, alpha: 1 ).cgColor
+    let blackColor = UIColor(red: 184/255, green: 139/255,blue: 74/255, alpha: 1 ).cgColor
+    let activeColor = UIColor.systemBlue.cgColor
     
     
     
