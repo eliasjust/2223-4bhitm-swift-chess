@@ -26,7 +26,7 @@ struct Model {
     var isDraw: Bool = false
     var isCheckMate: ChessColor?
     var pawnPromotes: Coordinates? = nil
-    enum ChessPiece: String {
+    enum ChessPiece: String, CaseIterable {
         case king
         case queen
         case rook

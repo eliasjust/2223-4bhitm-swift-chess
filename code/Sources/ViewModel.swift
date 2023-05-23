@@ -198,20 +198,26 @@ class ViewModel: ObservableObject {
         
     }
     
-    func getValidMoves(position:Coordinates) -> [Coordinates] {
-        guard let piece = model.board[position.row][position.column] else {return []}
+    func getValidMoveForPieceType(_ position: Coordinates, _ board:BoardClass, kingCheckValidation:Bool) -> [Coordinates] {
+        
+        guard let piece = board[position.row][position.column] else {return []}
  
         typealias MoveFunction = (Coordinates, BoardClass) -> [Coordinates]
         
         
        let getValidMovesForPiece: [ChessPiece:MoveFunction] = [
             .bishop: getValidMovesBishop,
-            .king: getValidMovesKing,
+            .king:  kingCheckValidation ?  getThreatenedSquaresKing : getValidMovesKing,
             .rook: getValidMovesRook,
             .knight: getValidMovesKnight,
-            .pawn: getValidMovesPawn,
+            .pawn: kingCheckValidation ? getThreatenedSquaresPawn : getValidMovesPawn,
             .queen: getValidMovesQueen,
         ]
+        return getValidMovesForPiece[piece.chessPiece]!(position, board)
+       
+    }
+    
+    func getValidMoves(position:Coordinates) -> [Coordinates] {
        
      
    
@@ -223,8 +229,8 @@ class ViewModel: ObservableObject {
         }*/
         //    let typeOfPiece = piece.chessPiece
         //var validMoves: [Coordinates] = getValidMovesForEachTypeOfPieces[typeOfPiece]!(position, board)
-        let getValidMovesHandler = getValidMovesForPiece[piece.chessPiece]!
-        let validMoves: [Coordinates] = getValidMovesHandler(position, board)
+        
+        let validMoves: [Coordinates] = getValidMoveForPieceType(position, board, kingCheckValidation: false)
         let movesThatAreInCheck = getMovesThatAreInCheck(from: position, moves: validMoves, board)
 
         return validMoves.filter { !movesThatAreInCheck.contains($0) }
@@ -292,6 +298,7 @@ class ViewModel: ObservableObject {
     func getValidRochadeSquares(_ square: Coordinates, _ board: BoardClass) -> [Coordinates] {
         var validRochadeMoves: [Coordinates] = []
         let piece = getChessPiece(square, board)
+         
         
         if piece.chessPiece == .king {
             if piece.chessColor == .white && !model.whiteKingHasMoved {
@@ -412,29 +419,26 @@ class ViewModel: ObservableObject {
         let kingColor = getColorsFromCoords(square, board)
         let opponentColor: ChessColor = kingColor == .white ? .black : .white
 
-        if pieceIsOnSquares(squares: getValidMovesRook(square, board), piece: Piece(chessPiece: .rook, chessColor: opponentColor), board) {
+        typealias MoveFunction = (Coordinates, BoardClass) -> [Coordinates]
+       let getValidMovesForPiece: [ChessPiece:MoveFunction] = [
+            .bishop: getValidMovesBishop,
+            .king:   getThreatenedSquaresKing ,
+            .rook: getValidMovesRook,
+            .knight: getValidMovesKnight,
+            .pawn:  getThreatenedSquaresPawn ,
+            .queen: getValidMovesQueen,
+        ]
+        
+        for pieceType in Model.ChessPiece.allCases {
+            
+            let piece = Piece(chessPiece: pieceType, chessColor: opponentColor)
+            print(piece.chessPiece)
+            let squares = getValidMovesForPiece[pieceType]!(square, board)
+            if  pieceIsOnSquares(squares: squares, piece: piece, board) {
             return true
+            }
         }
-
-        if pieceIsOnSquares(squares: getValidMovesBishop(square, board), piece: Piece(chessPiece: .bishop, chessColor: opponentColor), board) {
-            return true
-        }
-
-        if pieceIsOnSquares(squares: getValidMovesKnight(square, board), piece: Piece(chessPiece: .knight, chessColor: opponentColor), board) {
-            return true
-        }
-
-        if pieceIsOnSquares(squares: getThreatenedSquaresPawn(position: square, board), piece: Piece(chessPiece: .pawn, chessColor: opponentColor), board) {
-            return true
-        }
-        if pieceIsOnSquares(squares: getValidMovesQueen(square, board), piece: Piece(chessPiece: .queen, chessColor: opponentColor), board) {
-            return true
-        }
-
-        if pieceIsOnSquares(squares: getThreatenedSquaresKing(square, board), piece: Piece(chessPiece: .king, chessColor: opponentColor), board) {
-            return true
-        }
-
+       
         return false
     }
     
