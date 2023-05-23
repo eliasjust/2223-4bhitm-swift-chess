@@ -131,7 +131,7 @@ class ViewModel: ObservableObject {
             if to.column > from.column { // Kingside castling
                 rookFrom = Coordinates(row: from.row, column: 7)
                 rookTo = Coordinates(row: to.row, column: to.column - 1)
-            } else { // Queenside castling
+            } else { // ide castling
                 rookFrom = Coordinates(row: from.row, column: 0)
                 rookTo = Coordinates(row: to.row, column: to.column + 1)
             }
@@ -207,10 +207,10 @@ class ViewModel: ObservableObject {
         
        let getValidMovesForPiece: [ChessPiece:MoveFunction] = [
             .bishop: getValidMovesBishop,
-            .king:  kingCheckValidation ?  getThreatenedSquaresKing : getValidMovesKing,
+            .king:     getValidMovesKing,
             .rook: getValidMovesRook,
             .knight: getValidMovesKnight,
-            .pawn: kingCheckValidation ? getThreatenedSquaresPawn : getValidMovesPawn,
+            .pawn:   getValidMovesPawn,
             .queen: getValidMovesQueen,
         ]
         return getValidMovesForPiece[piece.chessPiece]!(position, board)
@@ -246,6 +246,7 @@ class ViewModel: ObservableObject {
     /// Pawn Moves
     func getValidMovesPawn(_ position:Coordinates, _ board: BoardClass) -> [Coordinates] {
         var coordinates: [Coordinates] = [Coordinates]()
+       
         
         let pieceColor = getColorsFromCoords(position, board)
         let (direction, baseRow) = pieceColor == .white ? (-1, 6) : (1, 1)
@@ -433,7 +434,7 @@ class ViewModel: ObservableObject {
             
             let piece = Piece(chessPiece: pieceType, chessColor: opponentColor)
             print(piece.chessPiece)
-            let squares = getValidMovesForPiece[pieceType]!(square, board)
+            let squares = pieceType == .bishop ? BishopStrategy().getValidMoves(square,board) : getValidMovesForPiece[pieceType]!(square, board)
             if  pieceIsOnSquares(squares: squares, piece: piece, board) {
             return true
             }
