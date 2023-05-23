@@ -17,6 +17,7 @@ class ViewModel: ObservableObject {
     typealias ChessPiece = Model.ChessPiece
     typealias Coordinates = Model.Coordinates
     let defaultBlackKingPos = Coordinates(row: 0, column: 4)
+  
     let defaultWhiteKingPos = Coordinates(row: 7, column: 4)
     
     var whiteBeatenPieces: [Piece] {
@@ -131,7 +132,7 @@ class ViewModel: ObservableObject {
             if to.column > from.column { // Kingside castling
                 rookFrom = Coordinates(row: from.row, column: 7)
                 rookTo = Coordinates(row: to.row, column: to.column - 1)
-            } else { // ide castling
+            } else { // Queenside castling
                 rookFrom = Coordinates(row: from.row, column: 0)
                 rookTo = Coordinates(row: to.row, column: to.column + 1)
             }
@@ -198,24 +199,7 @@ class ViewModel: ObservableObject {
         
     }
     
-    func getValidMoveForPieceType(_ position: Coordinates, _ board:BoardClass, kingCheckValidation:Bool) -> [Coordinates] {
-        
-        guard let piece = board[position.row][position.column] else {return []}
- 
-        typealias MoveFunction = (Coordinates, BoardClass) -> [Coordinates]
-        
-        
-       let getValidMovesForPiece: [ChessPiece:MoveFunction] = [
-            .bishop: getValidMovesBishop,
-            .king:     getValidMovesKing,
-            .rook: getValidMovesRook,
-            .knight: getValidMovesKnight,
-            .pawn:   getValidMovesPawn,
-            .queen: getValidMovesQueen,
-        ]
-        return getValidMovesForPiece[piece.chessPiece]!(position, board)
-       
-    }
+    
     
     func getValidMoves(position:Coordinates) -> [Coordinates] {
        
@@ -230,7 +214,7 @@ class ViewModel: ObservableObject {
         //    let typeOfPiece = piece.chessPiece
         //var validMoves: [Coordinates] = getValidMovesForEachTypeOfPieces[typeOfPiece]!(position, board)
         
-        let validMoves: [Coordinates] = getValidMoveForPieceType(position, board, kingCheckValidation: false)
+        let validMoves: [Coordinates] = AllStrategies.getValidMoves(position, board)
         let movesThatAreInCheck = getMovesThatAreInCheck(from: position, moves: validMoves, board)
 
         return validMoves.filter { !movesThatAreInCheck.contains($0) }
@@ -246,7 +230,7 @@ class ViewModel: ObservableObject {
     /// Pawn Moves
     func getValidMovesPawn(_ position:Coordinates, _ board: BoardClass) -> [Coordinates] {
         var coordinates: [Coordinates] = [Coordinates]()
-       
+        
         
         let pieceColor = getColorsFromCoords(position, board)
         let (direction, baseRow) = pieceColor == .white ? (-1, 6) : (1, 1)
@@ -434,7 +418,7 @@ class ViewModel: ObservableObject {
             
             let piece = Piece(chessPiece: pieceType, chessColor: opponentColor)
             print(piece.chessPiece)
-            let squares = pieceType == .bishop ? BishopStrategy().getValidMoves(square,board) : getValidMovesForPiece[pieceType]!(square, board)
+            let squares =  getValidMovesForPiece[pieceType]!(square, board)
             if  pieceIsOnSquares(squares: squares, piece: piece, board) {
             return true
             }

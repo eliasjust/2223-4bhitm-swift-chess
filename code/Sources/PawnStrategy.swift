@@ -8,7 +8,9 @@
 import Foundation
 
 
-class PawnStrategy: MoveStrategy {
+class PawnStrategy: MoveStrategy, ThreatStrategy {
+   
+    
     let viewmodel : ViewModel
     
 
@@ -36,7 +38,7 @@ class PawnStrategy: MoveStrategy {
         }
         
         /// all for en passant
-        return coordinates + viewmodel.getThreatenedSquaresPawn(position: position, board).compactMap { $0 }.filter { coord -> Bool in
+        return coordinates + getThreatenPieces(position, board).compactMap { $0 }.filter { coord -> Bool in
             if board[coord.row][coord.column] != nil {
                 return true
             } else if let pawnMadeTwoMoves = viewmodel.pawnMadeTwoMovesSquare,
@@ -45,5 +47,11 @@ class PawnStrategy: MoveStrategy {
             }
             return false
         }
+    }
+    
+    
+    func getThreatenPieces( _ position:Coordinates, _ board: BoardClass) -> [Coordinates] {
+        let directions = (board[position.row][position.column]?.chessColor == .white) ? [(-1, -1), (-1, 1)] : [(1, -1), (1, 1)]
+        return viewmodel.getValidMovesWithDirections(position, directions: directions, maxReach: 1, board)
     }
 }
