@@ -8,5 +8,5 @@
 import Foundation
 
 protocol MoveStrategy {
-    func getValidMoves( _ position : ViewModel.Coordinates,_ board: Model.BoardClass) -> [ViewModel.Coordinates]
+    func getValidMoves(_ position: ViewModel.Coordinates, _ board: Model.BoardClass) -> [ViewModel.Coordinates]
 }

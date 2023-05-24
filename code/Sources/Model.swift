@@ -69,7 +69,7 @@ struct Model {
         ]
     }
     
-    struct Piece: Equatable,Hashable  {
+    struct Piece: Equatable, Hashable  {
         var chessPiece: ChessPiece
         var chessColor: ChessColor
        
