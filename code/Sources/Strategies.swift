@@ -19,12 +19,12 @@ class AllStrategies {
         let pieceType = viewmodel.getChessPiece(position, board).chessPiece
        
         let strategyForChessType: StrategyForEachChessType = [
-            .bishop: BishopStrategy().getValidMoves,
-            .pawn: PawnStrategy().getValidMoves,
-            .knight: KnightStrategy().getValidMoves,
-            .rook: RookStrategy().getValidMoves,
-            .queen: QueenStrategy().getValidMoves,
-            .king: KingStrategy().getValidMoves
+            .bishop: BishopStrategy().validMoves,
+            .pawn: PawnStrategy().validMoves,
+            .knight: KnightStrategy().validMoves,
+            .rook: RookRule().validMoves,
+            .queen: QueenStrategy().validMoves,
+            .king: KingStrategy().validMoves
         ]
         
         return strategyForChessType[pieceType]!(position, board)
@@ -36,11 +36,11 @@ class AllStrategies {
         let pieceType = viewmodel.getChessPiece(position, board).chessPiece
        
         let strategyForChessType: StrategyForEachChessType = [
-            .bishop: BishopStrategy().getValidMoves,
+            .bishop: BishopStrategy().validMoves,
             .pawn: PawnStrategy().getThreatenPieces,
-            .knight: KnightStrategy().getValidMoves,
-            .rook: RookStrategy().getValidMoves,
-            .queen: QueenStrategy().getValidMoves,
+            .knight: KnightStrategy().validMoves,
+            .rook: RookRule().validMoves,
+            .queen: QueenStrategy().validMoves,
             .king: KingStrategy().getThreatenPieces
         ]
         

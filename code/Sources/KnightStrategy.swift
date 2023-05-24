@@ -7,7 +7,7 @@
 
 import Foundation
 
-class KnightStrategy:MoveStrategy {
+class KnightStrategy:Rule {
     let maxReach = 1
     let directions = [(-1, -2), (-2, -1), (-2, 1), (-1, 2),  (1, 2), (2, 1), (2, -1), (1, -2)]
     let viewModel: ViewModel
@@ -15,7 +15,7 @@ class KnightStrategy:MoveStrategy {
     init() {
         viewModel = ViewModel()
     }
-    func getValidMoves(_ position: ViewModel.Coordinates, _ board: Model.BoardClass) -> [ViewModel.Coordinates] {
+    func validMoves(_ position: ViewModel.Coordinates, _ board: Model.BoardClass) -> [ViewModel.Coordinates] {
         
         return viewModel.getValidMovesWithDirections(position, directions: directions, maxReach: maxReach, board)
         

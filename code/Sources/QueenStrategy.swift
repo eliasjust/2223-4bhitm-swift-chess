@@ -7,8 +7,8 @@
 
 import Foundation
 
-class QueenStrategy: MoveStrategy {
-    func getValidMoves(_ position: ViewModel.Coordinates, _ board: Model.BoardClass) -> [ViewModel.Coordinates] {
+class QueenStrategy: Rule {
+    func validMoves(_ position: ViewModel.Coordinates, _ board: Model.BoardClass) -> [ViewModel.Coordinates] {
         return viewmodel.getValidMovesWithDirections(position, directions: directions, maxReach: maxReach, board)
     }
     

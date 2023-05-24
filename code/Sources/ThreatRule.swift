@@ -8,6 +8,6 @@
 import Foundation
 
 
-protocol ThreatStrategy {
+protocol ThreatRule {
     func getThreatenPieces(_ position: ViewModel.Coordinates, _ board: ViewModel.BoardClass) -> [ViewModel.Coordinates]
 }

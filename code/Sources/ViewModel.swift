@@ -15,7 +15,7 @@ class ViewModel: ObservableObject {
     typealias Piece = Model.Piece
     typealias ChessColor = Model.ChessColor
     typealias ChessPiece = Model.ChessPiece
-    typealias Coordinates = Model.Coordinates
+    typealias Coordinates = Model.Coordinate
     let defaultBlackKingPos = Coordinates(row: 0, column: 4)
   
     let defaultWhiteKingPos = Coordinates(row: 7, column: 4)

@@ -8,7 +8,7 @@
 import Foundation
 
 
-class KingStrategy:MoveStrategy, ThreatStrategy {
+class KingStrategy:Rule, ThreatRule {
     
     let viewmodel: ViewModel
     let maxReach = 1
@@ -18,7 +18,7 @@ class KingStrategy:MoveStrategy, ThreatStrategy {
     init() {
         viewmodel = ViewModel()
     }
-    func getValidMoves(_ position: ViewModel.Coordinates, _ board: Model.BoardClass) -> [ViewModel.Coordinates] {
+    func validMoves(_ position: ViewModel.Coordinates, _ board: Model.BoardClass) -> [ViewModel.Coordinates] {
         return getThreatenPieces(position, board) + viewmodel.getValidRochadeSquares(position, board)
 
     }

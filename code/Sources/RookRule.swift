@@ -7,8 +7,8 @@
 
 import Foundation
 
-class RookStrategy: MoveStrategy {
-    func getValidMoves(_ position: ViewModel.Coordinates, _ board: Model.BoardClass) -> [ViewModel.Coordinates] {
+class RookRule: Rule {
+    func validMoves(_ position: ViewModel.Coordinates, _ board: Model.BoardClass) -> [ViewModel.Coordinates] {
         return viewModel.getValidMovesWithDirections(position, directions: directions, maxReach: maxReach, board)
     }
     

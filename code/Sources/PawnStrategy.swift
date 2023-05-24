@@ -8,7 +8,7 @@
 import Foundation
 
 
-class PawnStrategy: MoveStrategy, ThreatStrategy {
+class PawnStrategy: Rule, ThreatRule {
    
     
     let viewmodel : ViewModel
@@ -23,7 +23,7 @@ class PawnStrategy: MoveStrategy, ThreatStrategy {
         self.viewmodel = ViewModel()
     }
     
-    func getValidMoves(_ position:Coordinates, _ board:BoardClass) -> [Coordinates] {
+    func validMoves(_ position:Coordinates, _ board:BoardClass) -> [Coordinates] {
         var coordinates: [Coordinates] = [Coordinates]()
         
         
