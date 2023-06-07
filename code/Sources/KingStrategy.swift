@@ -17,7 +17,7 @@ class KingRule:Rule {
             model: model, maxReach: 1, directions: moveDirectionsForPiece[.king]!, color: color)
     }
     override func validMoves(_ position: ViewModel.Coordinates) -> [ViewModel.Coordinates] {
-        return getThreatenPieces(position) + getValidRochadeSquares(position)
+        return getThreatenPieces(position, board) + getValidRochadeSquares(position)
 
     }
     
@@ -86,29 +86,19 @@ class KingRule:Rule {
     
     
     
-    func isKingInCheck(square: Coordinates, _ board: Model.BoardClass) -> Bool {
+    func isKingInCheck(square: ViewModel.Coordinates, _ board: Model.BoardClass) -> Bool {
         let kingColor = color
         let opponentColor: Model.ChessColor = kingColor == .white ? .black : .white
 
-        typealias MoveFunction = (Coordinates) -> [Coordinates]
+        typealias MoveFunction = (Coordinates, Model.BoardClass) -> [Coordinates]
       
-        let ruleForEachChessType: [Model.ChessPiece:MoveFunction] = [
-        
-            
-            .king: self.getThreatenPieces,
-            .bishop: BishopRule(model: self.model, color: opponentColor).getThreatenPieces,
-            .knight: KnightRule(model: self.model, color: opponentColor).getThreatenPieces,
-            .queen: QueenRule(model: self.model, color: opponentColor).getThreatenPieces,
-            .rook: RookRule(model: self.model, color: opponentColor).getThreatenPieces,
-            .pawn: PawnRule(model:self.model, color: opponentColor).getThreatenPieces(_:)
-        
-        ]
         for pieceType in Model.ChessPiece.allCases {
             
             
             let piece = Model.Piece(chessPiece: pieceType, chessColor: opponentColor)
-            let squares =  ruleForEachChessType[pieceType]!(square)
+            let squares =  Rule.getRuleByChessPiece(model: model, color: opponentColor, chessPiece: pieceType).getThreatenPieces(square, board)
             if  pieceIsOnSquares(squares: squares, piece: piece) {
+            print(" King is in Check \(kingColor)")
             return true
             }
         }
@@ -116,12 +106,6 @@ class KingRule:Rule {
         return false
     }
     
-    func hypotheticalMove(from: Coordinates, to:Coordinates) -> Model.BoardClass {
-        var board = model.board
-        board[to.row][to.column] = board[from.row][from.column]
-        board[from.row][from.column] = nil
-        return board
-    }
     
 
     

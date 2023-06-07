@@ -72,7 +72,7 @@ struct ContentView: View {
     
     @ViewBuilder
     func viewForGameOver() -> some View {
-        if viewmodel.gameIsEnded{
+        if viewmodel.gameIsEnded {
             VStack {
                 Text(viewmodel.whiteIsCheckMate ? "Black is Winner" : (viewmodel.blackIsCheckMate ?  "White is Winner" : "Its a Draw"))
                     .font(Font.largeTitle)

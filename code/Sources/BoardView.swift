@@ -162,8 +162,7 @@ class BoardView: UIView {
             
             if !pieceAtTappedArea && fromSquare == nil { return}
             if fromSquare == nil {
-                
-                print("Assigning FromSquare")
+   
                 fromSquare = tappedAreaCoordinates
                 drawPredictions(viewmodel.getValidMoves(position: fromSquare!))
                 squarePreviousColor = colView.backgroundColor
@@ -174,7 +173,7 @@ class BoardView: UIView {
             
             
             else if tappedAreaCoordinates == fromSquare {
-                print("Deselecting a piece")
+  
                 fromSquare = nil
                 setNeedsDisplay()
             }
@@ -183,21 +182,14 @@ class BoardView: UIView {
             
             else if pieceAtTappedArea && fromSquare != nil  {
                 
-                print("Changing the FromSquare Position")
                 fromSquare = tappedAreaCoordinates
                 setNeedsDisplay()
-                //subviews[fromSquare!.row].subviews[fromSquare!.column].backgroundColor = squarePreviousColor
-                
-                
-                
+         
             }
-            
-            
+
             else  {
-                
-                print("Moving piece to \(tappedAreaCoordinates)")
+
                 viewmodel.handleMove(fromPosition: fromSquare!, toPosition: tappedAreaCoordinates)
-                
                 fromSquare = nil
                 self.setNeedsDisplay()
             }
@@ -205,10 +197,6 @@ class BoardView: UIView {
             
             
             
-        } else {
-            print(sender.view?.bounds.maxY ?? "sender view does not exist")
-            print(sender.view?.superview ??  "super view does not exist")
-            print("not found")
         }
         
     }
@@ -238,7 +226,7 @@ class BoardView: UIView {
     
     
     func highlightCheck (color: ViewModel.ChessColor) -> Void{
-        let position = viewmodel.findKing(color, viewmodel.board)
+        let position = viewmodel.findKing(color)
         if viewmodel.isKingInCheck(position: position) {
             subviews[position.row].subviews[position.column].backgroundColor = UIColor.red
         }

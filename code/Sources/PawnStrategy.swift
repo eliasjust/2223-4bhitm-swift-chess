@@ -11,7 +11,6 @@ import Foundation
 class PawnRule: Rule {
    
     
-    let viewmodel : ViewModel
    
     
 
@@ -22,7 +21,7 @@ class PawnRule: Rule {
     
     init(model:Model, color: Model.ChessColor) {
        
-        self.viewmodel = ViewModel()
+        
         super.init(model: model, maxReach: 1, directions:
                     [Direction(x:0, y: color == .black ?  -1 : 1)], color: color
         
@@ -33,7 +32,7 @@ class PawnRule: Rule {
         var coordinates: [Coordinates] = [Coordinates]()
         
         
-        let pieceColor = viewmodel.getColorsFromCoords(position, board)
+        let pieceColor = getColorsFromCoords(position, board)
         let (direction, baseRow) = pieceColor == .white ? (-1, 6) : (1, 1)
         
         if board[position.row + direction][position.column] == nil {
@@ -44,10 +43,10 @@ class PawnRule: Rule {
         }
         
         /// all for en passant
-        return coordinates + getThreatenPieces(position).compactMap { $0 }.filter { coord -> Bool in
+        return coordinates + getThreatenPieces(position, board).compactMap { $0 }.filter { coord -> Bool in
             if board[coord.row][coord.column] != nil {
                 return true
-            } else if let pawnMadeTwoMoves = viewmodel.pawnMadeTwoMovesSquare,
+            } else if let pawnMadeTwoMoves = model.pawnMadeTwoMovesSquare,
                       coord.row == (pawnMadeTwoMoves.row + direction) && coord.column == pawnMadeTwoMoves.column {
                 return true
             }
@@ -56,13 +55,13 @@ class PawnRule: Rule {
     }
     
     
-    override func getThreatenPieces( _ position:Coordinates) -> [Coordinates] {
+    override func getThreatenPieces( _ position:Coordinates,_ board: Model.BoardClass) -> [Coordinates] {
         let moveDirections = self.directions
         let beatDirections = color == .black
-        ? [Direction(x:-1, y:1), Direction(x:1, y:1)]
-        : [Direction(x: 1, y: 1), Direction(x: -1, y: 1)]
+        ? [Direction(x: 1, y: -1), Direction(x:1, y:1)]
+        : [Direction(x: -1, y: 1), Direction(x: -1, y: -1)]
         self.directions = beatDirections
-        let result = super.getValidMovesWithDirections(position)
+        let result = super.getValidMovesWithDirections(position, board)
         self.directions = moveDirections
         return result
     }
