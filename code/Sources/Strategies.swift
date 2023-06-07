@@ -19,15 +19,14 @@ class AllStrategies {
         let pieceType = viewmodel.getChessPiece(position, board).chessPiece
        
         let strategyForChessType: StrategyForEachChessType = [
-            .bishop: BishopStrategy().validMoves,
-            .pawn: PawnStrategy().validMoves,
-            .knight: KnightStrategy().validMoves,
-            .rook: RookRule().validMoves,
-            .queen: QueenStrategy().validMoves,
-            .king: KingStrategy().validMoves
+          
+          
+            
+          
+            :
         ]
         
-        return strategyForChessType[pieceType]!(position, board)
+        return []
         
     }
     
@@ -35,16 +34,11 @@ class AllStrategies {
     static func getThreatenPieces(_ position: ViewModel.Coordinates, _ board: Model.BoardClass ) -> [ViewModel.Coordinates] {
         let pieceType = viewmodel.getChessPiece(position, board).chessPiece
        
-        let strategyForChessType: StrategyForEachChessType = [
-            .bishop: BishopStrategy().validMoves,
-            .pawn: PawnStrategy().getThreatenPieces,
-            .knight: KnightStrategy().validMoves,
-            .rook: RookRule().validMoves,
-            .queen: QueenStrategy().validMoves,
-            .king: KingStrategy().getThreatenPieces
+        let strategyForChessType: StrategyForEachChessType = [:
+        
         ]
         
-        return strategyForChessType[pieceType]!(position, board)
+        return []
         
     }
     

@@ -7,18 +7,22 @@
 
 import Foundation
 
-class QueenStrategy: Rule {
-    func validMoves(_ position: ViewModel.Coordinates, _ board: Model.BoardClass) -> [ViewModel.Coordinates] {
-        return viewmodel.getValidMovesWithDirections(position, directions: directions, maxReach: maxReach, board)
+class QueenRule: Rule {
+    
+    
+    
+    
+    
+    init(model:Model, color: Model.ChessColor) {
+        
+        super.init(
+            model:model,
+            maxReach: 7,
+            directions: moveDirectionsForPiece[.queen]!,
+            color: color
+        )
+        
     }
-    
-    
-    let maxReach = 7
-    let directions = [(0, 1), (1, 0), (0, -1), (-1, 0),(1, 1), (1, -1), (-1, 1), (-1, -1)]
-    var viewmodel:ViewModel
-    
-    init() {
-        self.viewmodel = ViewModel()
-    }
+
     
 }

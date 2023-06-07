@@ -8,19 +8,18 @@
 import Foundation
 
 
-class BishopStrategy: Rule {
+class BishopRule: Rule {
     
-    let maxReach = 7
-    let directions =  [(1, 1), (1, -1), (-1, 1), (-1, -1)]
-    func validMoves(_ position: ViewModel.Coordinates, _ board: Model.BoardClass) -> [ViewModel.Coordinates] {
-        return viewModel.getValidMovesWithDirections(position, directions: directions, maxReach: maxReach, board)
+ 
+    
+    
+
+    
+    init(model:Model, color: Model.ChessColor) {
+        super.init(model: model, maxReach: 7, directions: moveDirectionsForPiece[.bishop]!, color: color)
     }
     
     
-    let viewModel: ViewModel
-    
-    init() {
-        self.viewModel = ViewModel()
-    }
+ 
     
 }

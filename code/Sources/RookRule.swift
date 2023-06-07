@@ -7,18 +7,22 @@
 
 import Foundation
 
+
 class RookRule: Rule {
-    func validMoves(_ position: ViewModel.Coordinates, _ board: Model.BoardClass) -> [ViewModel.Coordinates] {
-        return viewModel.getValidMovesWithDirections(position, directions: directions, maxReach: maxReach, board)
+    
+    
+    
+    
+    
+    
+    init(model:Model,color:Model.ChessColor) {
+        
+        super.init(model:model,maxReach: 7, directions:moveDirectionsForPiece[.rook]!, color: color)
+        
     }
+
     
-    let directions = [(0,1), (1, 0), (0, -1), (-1, 0)];
-    let maxReach = 7
-    let viewModel:ViewModel
     
-    init() {
-        self.viewModel = ViewModel()
     
-    }
     
 }

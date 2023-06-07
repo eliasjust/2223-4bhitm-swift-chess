@@ -231,7 +231,7 @@ class BoardView: UIView {
     
     func highlightCheck (color: ViewModel.ChessColor) -> Void{
         let position = viewmodel.findKing(color, viewmodel.board)
-        if viewmodel.isKingInCheck(square: position, viewmodel.board) {
+        if viewmodel.isKingInCheck(position: position) {
             subviews[position.row].subviews[position.column].backgroundColor = UIColor.red
         }
     }

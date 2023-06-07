@@ -8,10 +8,11 @@
 import Foundation
 
 
-class PawnStrategy: Rule, ThreatRule {
+class PawnRule: Rule {
    
     
     let viewmodel : ViewModel
+   
     
 
     
@@ -19,11 +20,16 @@ class PawnStrategy: Rule, ThreatRule {
     typealias BoardClass = ViewModel.BoardClass
     
     
-    init() {
+    init(model:Model, color: Model.ChessColor) {
+       
         self.viewmodel = ViewModel()
+        super.init(model: model, maxReach: 1, directions:
+                    [Direction(x:0, y: color == .black ?  -1 : 1)], color: color
+        
+        )
     }
     
-    func validMoves(_ position:Coordinates, _ board:BoardClass) -> [Coordinates] {
+    override func validMoves(_ position:Coordinates) -> [Coordinates] {
         var coordinates: [Coordinates] = [Coordinates]()
         
         
@@ -38,7 +44,7 @@ class PawnStrategy: Rule, ThreatRule {
         }
         
         /// all for en passant
-        return coordinates + getThreatenPieces(position, board).compactMap { $0 }.filter { coord -> Bool in
+        return coordinates + getThreatenPieces(position).compactMap { $0 }.filter { coord -> Bool in
             if board[coord.row][coord.column] != nil {
                 return true
             } else if let pawnMadeTwoMoves = viewmodel.pawnMadeTwoMovesSquare,
@@ -50,8 +56,14 @@ class PawnStrategy: Rule, ThreatRule {
     }
     
     
-    func getThreatenPieces( _ position:Coordinates, _ board: BoardClass) -> [Coordinates] {
-        let directions = (board[position.row][position.column]?.chessColor == .white) ? [(-1, -1), (-1, 1)] : [(1, -1), (1, 1)]
-        return viewmodel.getValidMovesWithDirections(position, directions: directions, maxReach: 1, board)
+    override func getThreatenPieces( _ position:Coordinates) -> [Coordinates] {
+        let moveDirections = self.directions
+        let beatDirections = color == .black
+        ? [Direction(x:-1, y:1), Direction(x:1, y:1)]
+        : [Direction(x: 1, y: 1), Direction(x: -1, y: 1)]
+        self.directions = beatDirections
+        let result = super.getValidMovesWithDirections(position)
+        self.directions = moveDirections
+        return result
     }
 }

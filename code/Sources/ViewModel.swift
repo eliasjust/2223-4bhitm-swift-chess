@@ -17,7 +17,7 @@ class ViewModel: ObservableObject {
     typealias ChessPiece = Model.ChessPiece
     typealias Coordinates = Model.Coordinate
     let defaultBlackKingPos = Coordinates(row: 0, column: 4)
-  
+    
     let defaultWhiteKingPos = Coordinates(row: 7, column: 4)
     
     var whiteBeatenPieces: [Piece] {
@@ -50,30 +50,32 @@ class ViewModel: ObservableObject {
     var board: BoardClass {
         model.board
     }
-   
+    
     var currentTurnColor: ChessColor = .white
     ///needed for en passant
     var pawnMadeTwoMovesSquare: Coordinates? = nil
     
- 
-  
+    
+    func isKingInCheck(position: Coordinates) -> Bool {
+      return  KingRule(model:model,color:model.currentTurnColor).isKingInCheck(square: position, board)
+    }
     
     func setCoordinates (row: Int, column: Int) -> Coordinates {
         return Coordinates(row: row, column: column)
     }
     
-   
+    
     func enemyStandsOnSquare(_ position:Coordinates) -> Bool {
         return board[position.row][position.column] != nil
     }
     
     
     func handleMove(fromPosition: Coordinates, toPosition: Coordinates) -> Void {
-     
+        
         
         if moveIsValid(fromPosition: fromPosition, toPosition: toPosition) {
             print("move is valid")
-             let selectedPiece = getChessPiece(fromPosition, board)
+            let selectedPiece = getChessPiece(fromPosition, board)
             switch selectedPiece.chessPiece {
             case .rook, .king:
                 rookOrKingMoved(from: fromPosition, to: toPosition, chessPiece: selectedPiece.chessPiece)
@@ -92,15 +94,15 @@ class ViewModel: ObservableObject {
             if selectedPiece.chessPiece == .pawn {
                 pawnMoved(toSquare: toPosition)
             }
-     
+            
             
             
             model.currentTurnColor = model.currentTurnColor == .white ? .black : .white
-
+            
             handleGameStatus(board)
             
-           
-
+            
+            
         }
     }
     
@@ -166,7 +168,7 @@ class ViewModel: ObservableObject {
     }
     
     func pawnWillMove(fromSquare:Coordinates, toSquare:Coordinates ) -> Void {
-    
+        
         if fromSquare.column != toSquare.column && board[toSquare.row][toSquare.column] == nil {
             captureEnPasant(square: pawnMadeTwoMovesSquare!)
         }
@@ -188,7 +190,7 @@ class ViewModel: ObservableObject {
     func captureEnPasant(square:Coordinates) -> Void {
         guard  let piece = board[square.row][square.column] else {return}
         
-
+        
         model.board[square.row][square.column] = nil
         capturePiece(piece)
     }
@@ -202,120 +204,41 @@ class ViewModel: ObservableObject {
     
     
     func getValidMoves(position:Coordinates) -> [Coordinates] {
-       
-     
-   
+        
+        
+        
         
         
         //TODO: a piece could avoid a check
-       /* if isKingInCheck(square: findKing(currentTurnColor, board), board) && piece.chessPiece != .king {
-            return []
-        }*/
+        /* if isKingInCheck(square: findKing(currentTurnColor, board), board) && piece.chessPiece != .king {
+         return []
+         }*/
         //    let typeOfPiece = piece.chessPiece
         //var validMoves: [Coordinates] = getValidMovesForEachTypeOfPieces[typeOfPiece]!(position, board)
+        typealias MoveFunction = (Coordinates) -> [Coordinates]
+     
         
-        let validMoves: [Coordinates] = AllStrategies.getValidMoves(position, board)
+        let piece = getChessPiece(position, board)
+        let ruleForThePiece = Rule.getRuleByChessPiece(model: model, color: piece.chessColor, chessPiece: piece.chessPiece)
+        
+        let validMoves: [Coordinates] = ruleForThePiece.validMoves(position)
         let movesThatAreInCheck = getMovesThatAreInCheck(from: position, moves: validMoves, board)
-
+        
         return validMoves.filter { !movesThatAreInCheck.contains($0) }
     }
     
     func getMovesThatAreInCheck(from: Coordinates, moves: [Coordinates], _ board: BoardClass) -> [Coordinates] {
-         moves.filter {
-            let hypotheticalBoard =  hypotheticalMove(from: from, to: $0)
-            return isKingInCheck(square: findKing(currentTurnColor, hypotheticalBoard), hypotheticalBoard)
+        let kingRule = KingRule(model: model, color: model.currentTurnColor)
+        return moves.filter {
+            let hypotheticalBoard =  kingRule.hypotheticalMove(from: from, to: $0)
+            return kingRule.isKingInCheck(square: findKing(currentTurnColor, hypotheticalBoard), hypotheticalBoard)
         }
     }
     
-    /// Pawn Moves
+ 
     
-    
-   
-    
-    func getValidRochadeSquares(_ square: Coordinates, _ board: BoardClass) -> [Coordinates] {
-        var validRochadeMoves: [Coordinates] = []
-        let piece = getChessPiece(square, board)
-         
-        
-        if piece.chessPiece == .king {
-            if piece.chessColor == .white && !model.whiteKingHasMoved {
-                if !model.a1whiteRookHasMoved && isValidRochadePath(square, direction: (0, -1), maxReach: 3, board) {
-                    validRochadeMoves.append(Coordinates(row: square.row, column: square.column - 2))
-                }
-                if !model.h1whiteRookHasMoved && isValidRochadePath(square, direction: (0, 1), maxReach: 2, board) {
-                    validRochadeMoves.append(Coordinates(row: square.row, column: square.column + 2))
-                }
-            } else if piece.chessColor == .black && !model.blackKingHasMoved {
-                if !model.a8blackRookHasMoved && isValidRochadePath(square, direction: (0, -1), maxReach: 3, board) {
-                    validRochadeMoves.append(Coordinates(row: square.row, column: square.column - 2))
-                }
-                if !model.h8blackRookHasMoved && isValidRochadePath(square, direction: (0, 1), maxReach: 2, board) {
-                    validRochadeMoves.append(Coordinates(row: square.row, column: square.column + 2))
-                }
-            }
-            
-     
-        }
-        
-      
-        return validRochadeMoves
-    }
-    
-
-    
-    func isValidRochadePath(_ square: Coordinates, direction: (Int, Int), maxReach: Int, _ board: BoardClass) -> Bool {
-        var count = 0
-        var newCoord = Coordinates(row: square.row + direction.0, column: square.column + direction.1)
-        
-        var kingChecked = isKingInCheck(square: square, board)
-        
-        
-
-        while count < maxReach {
-           
-            if board[newCoord.row][newCoord.column] != nil || kingChecked {
-                return false
-            }
-            
-            
-            let hypotheticalBoard = hypotheticalMove(from: square, to: newCoord)
-            kingChecked = isKingInCheck(square: newCoord, hypotheticalBoard)
-
-            
-            newCoord.row += direction.0
-            newCoord.column += direction.1
-            count += 1
-        }
-        
-        return true
-    }
-    
-    
-    //change to mapper
-    func getValidMovesWithDirections(_ square: Coordinates, directions: [(Int,Int)], maxReach: Int, _ board: BoardClass) -> [Coordinates] {
-        var validMoves: [Coordinates] = []
-        guard let movingPiece = board[square.row][square.column]  else {return validMoves}
-        
-        for direction in directions {
-            var count = 0
-            var newCoord = Coordinates(row: square.row + direction.0, column: square.column + direction.1)
-            
-            while isValidCoordinate(cord: newCoord, color: movingPiece.chessColor, board) && count < maxReach {
-                validMoves.append(newCoord)
-                
-                if board[newCoord.row][newCoord.column] != nil {break}
-                
-                newCoord.row += direction.0
-                newCoord.column += direction.1
-                count += 1
-                
-            }
-        }
-        return validMoves
-    }
-  
     func promotePawn(square:Coordinates, _ board: BoardClass) -> Void {
-       // let piece =  Piece(chessPiece: .queen, chessColor: getColorsFromCoords(square, board))
+        // let piece =  Piece(chessPiece: .queen, chessColor: getColorsFromCoords(square, board))
         //model.board[square.row][square.column] = piece
         model.pawnPromotes = Coordinates(row: square.row, column: square.column)
     }
@@ -347,24 +270,7 @@ class ViewModel: ObservableObject {
     }
     
     
-    func isKingInCheck(square: Coordinates, _ board: BoardClass) -> Bool {
-        let kingColor = getColorsFromCoords(square, board)
-        let opponentColor: ChessColor = kingColor == .white ? .black : .white
-
-        typealias MoveFunction = (Coordinates, BoardClass) -> [Coordinates]
-      
-        
-        for pieceType in Model.ChessPiece.allCases {
-            
-            let piece = Piece(chessPiece: pieceType, chessColor: opponentColor)
-            let squares =  AllStrategies.getThreatenPieces(square, board)
-            if  pieceIsOnSquares(squares: squares, piece: piece, board) {
-            return true
-            }
-        }
-       
-        return false
-    }
+ 
     
     func pieceIsOnSquares(squares: [Coordinates], piece: Piece, _ board: BoardClass) -> Bool {
         return squares.contains { board[$0.row][$0.column] == piece }
@@ -387,9 +293,9 @@ class ViewModel: ObservableObject {
     
     
     func handleGameStatus( _ board: BoardClass) -> Void  {
-        
+        let kingRule = KingRule(model: model, color: model.currentTurnColor)
         if !isThereAValidMove(chessColor: model.currentTurnColor, board) {
-            if isKingInCheck(square: findKing(currentTurnColor, board), board) {
+            if kingRule.isKingInCheck(square: findKing(currentTurnColor, board), board) {
                 print(currentTurnColor.rawValue + " is Checkmate")
                 model.isCheckMate = currentTurnColor
             }else {
@@ -408,10 +314,12 @@ class ViewModel: ObservableObject {
     
     func getAllValidMoves(chessColor: ChessColor, _ board: BoardClass) -> [Coordinates] {
         var validSquares: [Coordinates] = []
+        
+        
         for (row,rowPieces) in board.enumerated() {
             for (col,pieces) in rowPieces.enumerated() {
                 if pieces?.chessColor == chessColor {
-                    validSquares += getValidMoves(position: Coordinates(row: row, column: col))
+                    validSquares += Rule.getRuleByChessPiece(model: model, color: model.currentTurnColor, chessPiece: pieces!.chessPiece).validMoves(Coordinates(row: row, column: col))
                 }
             }
         }
@@ -427,26 +335,6 @@ class ViewModel: ObservableObject {
     }
     
     
-    /*
-    func getThreatenedSquaresForPiece(square: Coordinates, board: BoardClass) -> [Coordinates] {
-        let piece = getChessPiece(square, board)
-        switch piece.chessPiece {
-        case .bishop:
-            return getValidMovesBishop(square, board)
-        case .king:
-            return getThreatenedSquaresKing(square, board)
-        case .rook:
-            return getValidMovesRook(square, board)
-        case .knight:
-            return getValidMovesKnight(square, board)
-        case .pawn:
-            return getThreatenedSquaresPawn(position: square, board)
-        case .queen:
-            return getValidMovesQueen(square, board)
-            
-        }
-        
-    }*/
     
     
     
