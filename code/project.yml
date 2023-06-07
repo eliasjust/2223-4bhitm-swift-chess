@@ -5,7 +5,7 @@ targets:
     info:
       path: chess/Info.plist
       properties:
-        UISupportedInterfaceOrientations: [ UIInterfaceOrientationPortrait ]
+        UISupportedInterfaceOrientations: [ UIInterfaceOrientationPortrait, UIInterfaceOrientationLandscapeRight, UIInterfaceOrientationLandscapeLeft ]
         UILaunchStoryboardName: LaunchScreen
 
 

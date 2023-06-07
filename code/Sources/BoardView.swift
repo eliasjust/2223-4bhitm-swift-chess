@@ -44,6 +44,7 @@ class BoardView: UIView {
     
     
     func createPredictionCircle(_ coordinates:ViewModel.Coordinates) -> UIView {
+        let  squareSize =  bounds.width / 8
         
         let enemyStandsOnField =  viewmodel.enemyStandsOnSquare(coordinates)
         
@@ -84,6 +85,10 @@ class BoardView: UIView {
     
     
     func createPieceLayer(piece: Model.ChessPiece, color: Model.ChessColor) -> UIView {
+        
+        let  squareSize =  bounds.width / 8
+        let rowWidth = bounds.width
+        
         let pieceView = UIView()
         
         pieceView.layer.frame = CGRect(x:0,y:0,width:squareSize,height: squareSize)
@@ -107,7 +112,6 @@ class BoardView: UIView {
         
         let  squareSize =  bounds.width / 8
         let rowWidth = bounds.width
-        
         for row in  0..<8 {
             let rowView = UIView()
             rowView.layer.frame = CGRect(x: 0 , y:   CGFloat(row) * squareSize, width: rowWidth, height: squareSize)
