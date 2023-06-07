@@ -11,16 +11,12 @@ import Foundation
 class RookRule: Rule {
     
     
-    
-    
-    
-    
     init(model:Model,color:Model.ChessColor) {
         
         super.init(model:model,maxReach: 7, directions:moveDirectionsForPiece[.rook]!, color: color)
         
     }
-
+    
     
     
     

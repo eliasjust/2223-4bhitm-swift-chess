@@ -9,12 +9,7 @@ import Foundation
 
 class QueenRule: Rule {
     
-    
-    
-    
-    
     init(model:Model, color: Model.ChessColor) {
-        
         super.init(
             model:model,
             maxReach: 7,
@@ -23,6 +18,6 @@ class QueenRule: Rule {
         )
         
     }
-
+    
     
 }

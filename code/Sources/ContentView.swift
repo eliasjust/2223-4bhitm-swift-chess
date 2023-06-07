@@ -22,17 +22,8 @@ struct ContentView: View {
             if viewmodel.initialGameState {
                 StartView(viewModel: viewmodel)
             } else {
-                if orientation.isPortrait {
-                    VStack {
-                        
-                        BeatenPieces(pieces: viewmodel.blackBeatenPieces).frame( height: hStacksHeight * 0.85)
-                        ChessBoardViewControllerWrapper(viewmodel: viewmodel) .aspectRatio(1, contentMode: .fit)
-                        BeatenPieces(pieces: viewmodel.whiteBeatenPieces).frame(height: hStacksHeight * 0.85)
-                        Spacer()
-                        
-                        
-                    }.padding().blur(radius: viewmodel.gameIsEnded ? 10 : 0)
-                } else if orientation.isLandscape{
+                if orientation.isLandscape {
+                    
                     HStack {
                         
                         ChessBoardViewControllerWrapper(viewmodel: viewmodel).aspectRatio(1, contentMode: .fit)
@@ -43,6 +34,23 @@ struct ContentView: View {
                         }
                         
                     }.padding().blur(radius: viewmodel.gameIsEnded ? 10 : 0)
+                    
+                    
+                } else {
+                    
+                    VStack {
+                        
+                        BeatenPieces(pieces: viewmodel.whiteBeatenPieces).frame(height: hStacksHeight * 0.85)
+
+                        ChessBoardViewControllerWrapper(viewmodel: viewmodel) .aspectRatio(1, contentMode: .fit)
+                        BeatenPieces(pieces: viewmodel.blackBeatenPieces).frame( height: hStacksHeight * 0.85)
+
+                        Spacer()
+                        
+                        
+                    }.padding().blur(radius: viewmodel.gameIsEnded ? 10 : 0)
+
+
                 }
                 
             }
@@ -73,6 +81,7 @@ struct ContentView: View {
     @ViewBuilder
     func viewForGameOver() -> some View {
         if viewmodel.gameIsEnded {
+
             VStack {
                 Text(viewmodel.whiteIsCheckMate ? "Black is Winner" : (viewmodel.blackIsCheckMate ?  "White is Winner" : "Its a Draw"))
                     .font(Font.largeTitle)
