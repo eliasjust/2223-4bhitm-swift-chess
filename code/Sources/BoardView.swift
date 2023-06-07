@@ -87,7 +87,6 @@ class BoardView: UIView {
     func createPieceLayer(piece: Model.ChessPiece, color: Model.ChessColor) -> UIView {
         
         let  squareSize =  bounds.width / 8
-        let rowWidth = bounds.width
         
         let pieceView = UIView()
         
@@ -98,6 +97,11 @@ class BoardView: UIView {
         if let image = UIImage(named: imageName) {
             pieceView.layer.contents = image.cgImage
         }
+        
+        if viewmodel.playerIsColor == .black {
+            pieceView.transform = CGAffineTransform(rotationAngle: CGFloat.pi )
+        }
+
         
         pieceView.layer.contentsGravity = .resizeAspect
         

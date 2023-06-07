@@ -9,6 +9,8 @@ import Foundation
 
 struct Model {
     
+    var playerIsColor: ChessColor = .white
+    var initialGameState: Bool = true
     
     var blackBeatenPieces: [Piece]  =  []
     var whiteBeatenPieces:  [Piece] = []

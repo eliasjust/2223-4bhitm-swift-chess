@@ -19,34 +19,45 @@ struct ContentView: View {
         
         
         ZStack {
-            if orientation.isPortrait {
-                VStack {
-                    
-                    BeatenPieces(pieces: viewmodel.blackBeatenPieces).frame( height: hStacksHeight)
-                    ChessBoardViewControllerWrapper(viewmodel: viewmodel) .aspectRatio(1, contentMode: .fit)
-                    BeatenPieces(pieces: viewmodel.whiteBeatenPieces).frame(height: hStacksHeight)
-                    Spacer()
-                    
-                    
-                }.padding().blur(radius: viewmodel.gameIsEnded ? 10 : 0)
-            } else if orientation.isLandscape{
-                HStack {
-                    
-                    ChessBoardViewControllerWrapper(viewmodel: viewmodel).aspectRatio(1, contentMode: .fit)
-                    
-                    VStack{
-                        BeatenPieces(pieces: viewmodel.whiteBeatenPieces).frame(height: hStacksHeight)
-                        BeatenPieces(pieces: viewmodel.blackBeatenPieces).frame( height: hStacksHeight)
-                    }
-                    
-                }.padding().blur(radius: viewmodel.gameIsEnded ? 10 : 0)
+            if viewmodel.initialGameState {
+                StartView(viewModel: viewmodel)
+            } else {
+                if orientation.isPortrait {
+                    VStack {
+                        
+                        BeatenPieces(pieces: viewmodel.blackBeatenPieces).frame( height: hStacksHeight * 0.85)
+                        ChessBoardViewControllerWrapper(viewmodel: viewmodel) .aspectRatio(1, contentMode: .fit)
+                        BeatenPieces(pieces: viewmodel.whiteBeatenPieces).frame(height: hStacksHeight * 0.85)
+                        Spacer()
+                        
+                        
+                    }.padding().blur(radius: viewmodel.gameIsEnded ? 10 : 0)
+                } else if orientation.isLandscape{
+                    HStack {
+                        
+                        ChessBoardViewControllerWrapper(viewmodel: viewmodel).aspectRatio(1, contentMode: .fit)
+                        
+                        VStack{
+                            BeatenPieces(pieces: viewmodel.whiteBeatenPieces).frame(height: hStacksHeight * 0.85)
+                            BeatenPieces(pieces: viewmodel.blackBeatenPieces).frame( height: hStacksHeight * 0.85)
+                        }
+                        
+                    }.padding().blur(radius: viewmodel.gameIsEnded ? 10 : 0)
+                }
+                
             }
+ 
             
             viewForGameOver().background(.bar).cornerRadius(20).padding()
             if let _ = viewmodel.pawnPromotes {
                 pawnPromotionView()
             }
             
+            /*
+            if let _ = viewmodel.initialGameState {
+                initialGameView(
+            }
+            */
             
         }.onRotate{ newOrientation in
             orientation = newOrientation
@@ -193,15 +204,20 @@ class BoardViewController: UIViewController {
             chessboardView.widthAnchor.constraint(equalTo: chessboardView.heightAnchor)
         ])
         
+        if viewmodel.playerIsColor == .black {
+            view.transform = CGAffineTransform(rotationAngle: CGFloat.pi )
+        }
         
+
         /*
          NotificationCenter.default.addObserver(self,selector: #selector(handleDeviceRotation(_:)), name: UIDevice.orientationDidChangeNotification, object: nil)*/
     }
     
-    /*
-     @objc private func handleDeviceRotation(_ gesture: UIRotationGestureRecognizer) {
-     let deviceOrientation = UIDevice.current.orientation
+    private func handleDeviceRotation() {
+    // let deviceOrientation = UIDevice.current.orientation
      
+        
+        /*
      let rotationAngleForEachOrientation: Dictionary<UIDeviceOrientation, CGFloat> = [
      .portrait:CGFloat.zero,
      .landscapeLeft: CGFloat.pi / 2,
@@ -209,10 +225,10 @@ class BoardViewController: UIViewController {
      
      .portraitUpsideDown: CGFloat.pi
      ]
-     let angle = rotationAngleForEachOrientation[deviceOrientation] ?? CGFloat.zero
-     view.transform = CGAffineTransform(rotationAngle: angle )
-     }
-     */
+     let angle = rotationAngleForEachOrientation[deviceOrientation] ?? CGFloat.zero*/
+     view.transform = CGAffineTransform(rotationAngle: 180 )
+     
+         }
     
     deinit {
         NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)

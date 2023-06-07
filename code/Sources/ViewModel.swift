@@ -20,13 +20,22 @@ class ViewModel: ObservableObject {
     
     let defaultWhiteKingPos = Coordinates(row: 7, column: 4)
     
+    var initialGameState: Bool {
+        model.initialGameState
+    }
+
+    
+    var playerIsColor: ChessColor {
+        model.playerIsColor
+    }
+    
     var whiteBeatenPieces: [Piece] {
         model.whiteBeatenPieces
     }
     var blackBeatenPieces: [Piece] {
         model.blackBeatenPieces
     }
-    
+        
     var blackIsCheckMate:Bool {
         model.isCheckMate == .black
         
@@ -39,6 +48,7 @@ class ViewModel: ObservableObject {
     var gameIsEnded:Bool {
         model.isCheckMate != nil || model.isDraw == true
     }
+    
     
     
     var pawnPromotes:Coordinates? {
@@ -63,6 +73,12 @@ class ViewModel: ObservableObject {
     func setCoordinates (row: Int, column: Int) -> Coordinates {
         return Coordinates(row: row, column: column)
     }
+
+    
+    func setPlayerColor(color:ChessColor){
+        model.playerIsColor = color
+    }
+    
     
     
     func enemyStandsOnSquare(_ position:Coordinates) -> Bool {
@@ -332,6 +348,11 @@ class ViewModel: ObservableObject {
         model = Model()
         currentTurnColor = .white
         pawnMadeTwoMovesSquare = nil
+        model.initialGameState = true
+    }
+    
+    func startGame() -> Void {
+        model.initialGameState = false
     }
     
     
