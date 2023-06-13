@@ -8,7 +8,8 @@
 import Foundation
 
 struct Model {
-    
+    static let DATABASE = "http://localhost:3000/board"
+
     var playerIsColor: ChessColor = .white
     var initialGameState: Bool = true
     
@@ -17,6 +18,11 @@ struct Model {
     var currentTurnColor:ChessColor  = .white
     typealias BoardClass = [[Piece?]]
     var board: BoardClass
+    
+    struct PieceDto: Codable, Hashable {
+        var chessColor: String
+        var chessPiece: String
+    }
     
     var a8blackRookHasMoved: Bool = false
     var h8blackRookHasMoved: Bool = false
@@ -74,9 +80,11 @@ struct Model {
             whitePawns,
             [whiteRook, whiteKnight, whiteBishop, whiteQueen, whiteKing, whiteBishop, whiteKnight, whiteRook],
         ]
+     
+        
     }
     
-    struct Piece: Equatable, Hashable  {
+    struct Piece: Equatable, Hashable {
         var chessPiece: ChessPiece
         var chessColor: ChessColor
        
@@ -87,6 +95,62 @@ struct Model {
         var column: Int
     }
     
+    mutating func updateBoardFromJson(data: Data) {
+      
+        /*
+         
+         print json to string:
+        do {
+            print(try JSONSerialization.jsonObject(with: data, options: [])  )
+
+        } catch {
+            
+            print("can not convert")
+        }
+         
+         
+         
+         print array to json:
+        var testBoard: [[PieceDto]] = [[
+            PieceDto(chessColor: "test2", chessPiece: "test2")
+        ]]
+            
+
+        do {
+            let jsonData = try JSONEncoder().encode(testBoard)
+            if let jsonString = String(data: jsonData, encoding: .utf8) {
+                print(jsonString)
+            }
+        } catch {
+            print("Error converting array to JSON: \(error.localizedDescription)")
+        }
+         
+         
+        */
+        if let databaseBoard = try? JSONDecoder().decode([[PieceDto?]].self, from: data){
+            
+            var finalBoard: BoardClass = Array(repeating: Array(repeating: nil, count: 8), count: 8)
+            for (i, row) in databaseBoard.enumerated() {
+                for (j, col) in row.enumerated() {
+                    if let pieceString = col {
+                        if let chessPiece = Model.ChessPiece(rawValue: pieceString.chessPiece),
+                           let chessColor = Model.ChessColor(rawValue: pieceString.chessColor) {
+                            
+                            
+                            let validPiece = Piece(chessPiece: chessPiece, chessColor: chessColor)
+                            finalBoard[i][j] = validPiece
+                        }else {
+                            finalBoard[i][j] = nil
+                        }
+                    }
+
+                }
+            }
+            board = finalBoard
+        }
+    }
+    
+
     
 }
 

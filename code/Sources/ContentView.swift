@@ -41,7 +41,6 @@ struct ContentView: View {
                     VStack {
                         
                         BeatenPieces(pieces: viewmodel.whiteBeatenPieces).frame(height: hStacksHeight * 0.85)
-
                         ChessBoardViewControllerWrapper(viewmodel: viewmodel) .aspectRatio(1, contentMode: .fit)
                         BeatenPieces(pieces: viewmodel.blackBeatenPieces).frame( height: hStacksHeight * 0.85)
 

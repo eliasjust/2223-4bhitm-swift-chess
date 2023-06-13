@@ -23,6 +23,8 @@ class ViewModel: ObservableObject {
     var initialGameState: Bool {
         model.initialGameState
     }
+    
+    let databaseUri = Model.DATABASE
 
     
     var playerIsColor: ChessColor {
@@ -285,12 +287,6 @@ class ViewModel: ObservableObject {
         return color == .black ? model.blackKingPosition : model.whiteKingPosition
     }
     
-    
-    
-    
-  
-    
-    
   
     
     func restartGame() -> Void {
@@ -302,7 +298,31 @@ class ViewModel: ObservableObject {
     
     func startGame() -> Void {
         model.initialGameState = false
+        self.fetchBoardState() {
+            
+        }
     }
+    
+    func fetchBoardState(completion: @escaping () -> Void) {
+        let fetchQueue = DispatchQueue(label: "Fetch Board State")
+        fetchQueue.async {
+            if let data = ViewModel.loadBoardState(){
+                DispatchQueue.main.async {
+                    self.model.updateBoardFromJson(data: data)
+                    completion()
+                }
+            }
+        }
+    }
+
+    static func loadBoardState() -> Data? {
+        var data: Data?
+        if let url = URL(string: Model.DATABASE) {
+            data = try? Data(contentsOf: url)
+        }
+        return data
+    }
+
     
     
 }

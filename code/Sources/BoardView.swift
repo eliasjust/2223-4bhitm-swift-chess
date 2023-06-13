@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 import SwiftUI
- 
+import Combine
 
 
 class BoardView: UIView {
@@ -232,17 +232,18 @@ class BoardView: UIView {
         }
     }
     
-    init(viewModel:ViewModel) {
+    var cancellable: AnyCancellable?
+    init(viewModel: ViewModel) {
         self.viewmodel = viewModel
-        super.init(frame: CGRect.zero
-        )
+        super.init(frame: CGRect.zero)
         super.frame =  CGRect(x: 0, y: 0, width: boardSize, height: boardSize)
         
-        
-        
-        
-        
-        
+        // this is in swift not required it would be better to use a NotificationCenter, or KVO pattern or rerender it in the ContentView
+        cancellable = viewModel.$model.sink { [weak self] _ in
+            DispatchQueue.main.async {
+                self?.setNeedsDisplay()
+            }
+        }
     }
     
     
