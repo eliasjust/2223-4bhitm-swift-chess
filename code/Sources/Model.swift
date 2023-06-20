@@ -30,8 +30,7 @@ struct Model {
     var h1whiteRookHasMoved: Bool = false
     var whiteKingHasMoved: Bool = false
     var blackKingHasMoved: Bool = false
-    var blackKingPosition: ViewModel.Coordinates = ViewModel.Coordinates(row: 0, column: 4)
-    var whiteKingPosition: ViewModel.Coordinates = ViewModel.Coordinates(row: 7, column: 4)
+   
     
     var pawnMadeTwoMovesSquare: ViewModel.Coordinates? = nil
     

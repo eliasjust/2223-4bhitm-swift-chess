@@ -28,7 +28,7 @@ class PawnRule: Rule {
         )
     }
     
-    override func validMoves(_ position:Coordinates) -> [Coordinates] {
+    override func validMoves(_ position:Coordinates, _ board: Model.BoardClass) -> [Coordinates] {
         var coordinates: [Coordinates] = [Coordinates]()
         
         

@@ -16,7 +16,7 @@ class KingRule:Rule {
         super.init(
             model: model, maxReach: 1, directions: moveDirectionsForPiece[.king]!, color: color)
     }
-    override func validMoves(_ position: ViewModel.Coordinates) -> [ViewModel.Coordinates] {
+    override func validMoves(_ position: ViewModel.Coordinates, _ board: Model.BoardClass) -> [ViewModel.Coordinates] {
         return getThreatenPieces(position, board) + getValidRochadeSquares(position)
 
     }
@@ -87,7 +87,7 @@ class KingRule:Rule {
     
     
     func isKingInCheck(square: ViewModel.Coordinates, _ board: Model.BoardClass) -> Bool {
-        let kingColor = color
+        let kingColor = getColorsFromCoords(square, board)
         let opponentColor: Model.ChessColor = kingColor == .white ? .black : .white
 
         typealias MoveFunction = (Coordinates, Model.BoardClass) -> [Coordinates]

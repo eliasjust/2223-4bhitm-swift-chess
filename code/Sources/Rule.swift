@@ -75,7 +75,7 @@ class  Rule {
     
     
     
-    func validMoves(_ position:Coordinates) -> [Coordinates] {
+    func validMoves(_ position:Coordinates, _ board: Model.BoardClass) -> [Coordinates] {
         
         return getValidMovesWithDirections(position, board)
         
@@ -104,7 +104,7 @@ class  Rule {
     
     
     
-    func getMovesThatAreInCheck(from: Coordinates, moves: [Coordinates]) -> [Coordinates] {
+    func getMovesThatAreInCheck(from: Coordinates, moves: [Coordinates], _ board:Model.BoardClass) -> [Coordinates] {
         let kingRule = KingRule(model: model, color: model.currentTurnColor)
         return moves.filter {
             let hypotheticalBoard =  hypotheticalMove(from: from, to: $0)
@@ -127,21 +127,15 @@ class  Rule {
         
         
         
-        
-        //TODO: a piece could avoid a check
-        /* if isKingInCheck(square: findKing(currentTurnColor, board), board) && piece.chessPiece != .king {
-         return []
-         }*/
-        //    let typeOfPiece = piece.chessPiece
-        //var validMoves: [Coordinates] = getValidMovesForEachTypeOfPieces[typeOfPiece]!(position, board)
-        typealias MoveFunction = (Coordinates) -> [Coordinates]
+     
+        typealias MoveFunction = (Coordinates,_  board: Model.BoardClass) -> [Coordinates]
         
         let kingRule = KingRule(model: model, color: model.currentTurnColor)
         let piece = getChessPiece(position)
         let ruleForThePiece = Rule.getRuleByChessPiece(model: model, color: piece.chessColor, chessPiece: piece.chessPiece)
         
-        let validMoves: [Coordinates] = ruleForThePiece.validMoves(position)
-        let movesThatAreInCheck = kingRule.getMovesThatAreInCheck(from: position, moves: validMoves)
+        let validMoves: [Coordinates] = ruleForThePiece.validMoves(position, board)
+        let movesThatAreInCheck = kingRule.getMovesThatAreInCheck(from: position, moves: validMoves, board)
         
         return validMoves.filter { !movesThatAreInCheck.contains($0) }
     }
@@ -179,7 +173,7 @@ class  Rule {
     
     
      func handleGameStatus() -> Void  {
-        let kingPosition = model.currentTurnColor == .white ? model.whiteKingPosition : model.blackKingPosition
+         let kingPosition = findKing(model.currentTurnColor, model.board)
         let kingRule = KingRule(model: model, color: model.currentTurnColor)
         print("Current position for the \(model.currentTurnColor) king \(kingPosition)" )
         let isThereValidMoves = getAllValidMoves(model: model).isEmpty

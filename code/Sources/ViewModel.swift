@@ -167,14 +167,6 @@ class ViewModel: ObservableObject {
         model.board[to.row][to.column] = board[from.row][from.column]
         model.board[from.row][from.column] = nil
         let piece = getChessPiece(to, board)
-        if piece.chessPiece == .king {
-            
-            if(piece.chessColor == .black) {
-                model.blackKingPosition = to
-            } else {
-                model.whiteKingPosition = to
-            }
-        }
         
         currentTurnColor = (currentTurnColor == .white) ? .black : .white
     }
@@ -232,20 +224,14 @@ class ViewModel: ObservableObject {
         
         
         
-        //TODO: a piece could avoid a check
-        /* if isKingInCheck(square: findKing(currentTurnColor, board), board) && piece.chessPiece != .king {
-         return []
-         }*/
-        //    let typeOfPiece = piece.chessPiece
-        //var validMoves: [Coordinates] = getValidMovesForEachTypeOfPieces[typeOfPiece]!(position, board)
         typealias MoveFunction = (Coordinates) -> [Coordinates]
         
         let kingRule = KingRule(model: model, color: model.currentTurnColor)
         let piece = getChessPiece(position, board)
         let ruleForThePiece = Rule.getRuleByChessPiece(model: model, color: piece.chessColor, chessPiece: piece.chessPiece)
         
-        let validMoves: [Coordinates] = ruleForThePiece.validMoves(position)
-        let movesThatAreInCheck = kingRule.getMovesThatAreInCheck(from: position, moves: validMoves)
+        let validMoves: [Coordinates] = ruleForThePiece.validMoves(position, board)
+        let movesThatAreInCheck = kingRule.getMovesThatAreInCheck(from: position, moves: validMoves, board)
         
         return validMoves.filter { !movesThatAreInCheck.contains($0) }
     }
@@ -281,12 +267,19 @@ class ViewModel: ObservableObject {
         let piece = board[square.row][square.column]
         return piece != nil && piece!.chessColor == model.currentTurnColor
     }
- 
     
-    func findKing(_ color: ChessColor) -> Coordinates {
-        return color == .black ? model.blackKingPosition : model.whiteKingPosition
+    func findKing(_ color: Model.ChessColor) -> Coordinates {
+        findPiece(pieceToFind: Model.Piece(chessPiece: .king, chessColor: color), board)!
     }
     
+    func findPiece(pieceToFind: Model.Piece, _ board: Model.BoardClass) -> Coordinates? {
+        for (row, rowPieces) in board.enumerated() {
+            if let column = rowPieces.firstIndex(where: { $0 == pieceToFind }) {
+                return Coordinates(row: row, column: column)
+            }
+        }
+        return nil
+    }
   
     
     func restartGame() -> Void {
