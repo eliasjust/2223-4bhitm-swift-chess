@@ -69,7 +69,7 @@ class ViewModel: ObservableObject {
     
     
     func isKingInCheck(position: Coordinates) -> Bool {
-        return  KingRule(model:model,color:model.currentTurnColor).isKingInCheck(square: position, board)
+        return  Rule(model: model, maxReach: 7, directions: [], color: model.currentTurnColor).isKingInCheck(square: position, board)
     }
     
     func setCoordinates (row: Int, column: Int) -> Coordinates {
@@ -219,25 +219,10 @@ class ViewModel: ObservableObject {
     
     
     func getValidMoves(position:Coordinates) -> [Coordinates] {
-        
-        
-        
-        
-        
-        typealias MoveFunction = (Coordinates) -> [Coordinates]
-        
-        let kingRule = KingRule(model: model, color: model.currentTurnColor)
-        let piece = getChessPiece(position, board)
-        let ruleForThePiece = Rule.getRuleByChessPiece(model: model, color: piece.chessColor, chessPiece: piece.chessPiece)
-        
-        let validMoves: [Coordinates] = ruleForThePiece.validMoves(position, board)
-        let movesThatAreInCheck = kingRule.getMovesThatAreInCheck(from: position, moves: validMoves, board)
-        
-        return validMoves.filter { !movesThatAreInCheck.contains($0) }
+        let rule = Rule(model: model, maxReach: 7, directions: [], color: currentTurnColor)
+        return rule.getValidMoves(position: position)
     }
-    
-    
-    
+
     
     func promotePawn(square:Coordinates, _ board: BoardClass) -> Void {
         // let piece =  Piece(chessPiece: .queen, chessColor: getColorsFromCoords(square, board))

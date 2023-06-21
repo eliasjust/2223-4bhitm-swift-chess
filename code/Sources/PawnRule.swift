@@ -9,10 +9,6 @@ import Foundation
 
 
 class PawnRule: Rule {
-   
-    
-   
-    
 
     
     typealias Coordinates = ViewModel.Coordinates
@@ -63,6 +59,8 @@ class PawnRule: Rule {
         self.directions = beatDirections
         let result = super.getValidMovesWithDirections(position, board)
         self.directions = moveDirections
+        
+        print(result)
         return result
     }
 }

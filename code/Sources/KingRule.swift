@@ -83,31 +83,4 @@ class KingRule:Rule {
         return true
     }
     
-    
-    
-    
-    func isKingInCheck(square: ViewModel.Coordinates, _ board: Model.BoardClass) -> Bool {
-        let kingColor = getColorsFromCoords(square, board)
-        let opponentColor: Model.ChessColor = kingColor == .white ? .black : .white
-
-        typealias MoveFunction = (Coordinates, Model.BoardClass) -> [Coordinates]
-      
-        for pieceType in Model.ChessPiece.allCases {
-            
-            
-            let piece = Model.Piece(chessPiece: pieceType, chessColor: opponentColor)
-            let squares =  Rule.getRuleByChessPiece(model: model, color: opponentColor, chessPiece: pieceType).getThreatenPieces(square, board)
-            if  pieceIsOnSquares(squares: squares, piece: piece) {
-            print(" King is in Check \(kingColor)")
-            return true
-            }
-        }
-       
-        return false
-    }
-    
-    
-
-    
-    
 }

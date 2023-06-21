@@ -64,7 +64,7 @@ class  Rule {
         board[square.row][square.column]!
     }
     
-    func pieceIsOnSquares(squares: [Coordinates], piece: Model.Piece) -> Bool {
+    func pieceIsOnSquares(squares: [Coordinates], piece: Model.Piece, _ board: Model.BoardClass) -> Bool {
         return squares.contains { board[$0.row][$0.column] == piece }
     }
     
@@ -104,16 +104,17 @@ class  Rule {
     
     
     
-    func getMovesThatAreInCheck(from: Coordinates, moves: [Coordinates], _ board:Model.BoardClass) -> [Coordinates] {
-        let kingRule = KingRule(model: model, color: model.currentTurnColor)
+    func getMovesThatAreNotInCheck(from: Coordinates, moves: [Coordinates], _ board:Model.BoardClass) -> [Coordinates] {
         return moves.filter {
             let hypotheticalBoard =  hypotheticalMove(from: from, to: $0)
-            return kingRule.isKingInCheck(square: findKing(model.currentTurnColor, hypotheticalBoard), hypotheticalBoard)
+            return !isKingInCheck(square: findKing(model.currentTurnColor, hypotheticalBoard), hypotheticalBoard)
         }
     }
     
     
-    
+    func getOpponentColor(color: Model.ChessColor)  -> Model.ChessColor{
+        return color == .black ? .white : .black
+    }
     func hypotheticalMove(from: Coordinates, to:Coordinates) -> Model.BoardClass {
         var board = model.board
         board[to.row][to.column] = board[from.row][from.column]
@@ -123,11 +124,6 @@ class  Rule {
     
     
     func getValidMoves(position:Coordinates) -> [Coordinates] {
-        
-        
-        
-        
-     
         typealias MoveFunction = (Coordinates,_  board: Model.BoardClass) -> [Coordinates]
         
         let kingRule = KingRule(model: model, color: model.currentTurnColor)
@@ -135,9 +131,9 @@ class  Rule {
         let ruleForThePiece = Rule.getRuleByChessPiece(model: model, color: piece.chessColor, chessPiece: piece.chessPiece)
         
         let validMoves: [Coordinates] = ruleForThePiece.validMoves(position, board)
-        let movesThatAreInCheck = kingRule.getMovesThatAreInCheck(from: position, moves: validMoves, board)
+        return kingRule.getMovesThatAreNotInCheck(from: position, moves: validMoves, board)
         
-        return validMoves.filter { !movesThatAreInCheck.contains($0) }
+ 
     }
     
     
@@ -145,14 +141,11 @@ class  Rule {
         var validSquares: [Coordinates] = []
         
         
-        for (row,rowPieces) in model.board.enumerated() {
-            for (col,pieces) in rowPieces.enumerated() {
-                if pieces?.chessColor == model.currentTurnColor {
-                    validSquares += getValidMoves(position: Coordinates(row: row, column: col))
-                }
-            }
+        getPiecesForColor(color: model.currentTurnColor, board: model.board).forEach{
+            validSquares += getValidMoves(position: $0.1)
         }
-        print(validSquares)
+       
+        
         
         return validSquares
         
@@ -172,14 +165,14 @@ class  Rule {
     }
     
     
-     func handleGameStatus() -> Void  {
-         let kingPosition = findKing(model.currentTurnColor, model.board)
-        let kingRule = KingRule(model: model, color: model.currentTurnColor)
+    func handleGameStatus() -> Void  {
+        let kingPosition = findKing(model.currentTurnColor, model.board)
         print("Current position for the \(model.currentTurnColor) king \(kingPosition)" )
         let isThereValidMoves = getAllValidMoves(model: model).isEmpty
         print(isThereValidMoves)
         if isThereValidMoves {
-            if  kingRule.isKingInCheck(square:  kingPosition, model.board) {
+            let rule = Rule(model: model, maxReach: 7, directions: [], color: model.currentTurnColor)
+            if  rule.isKingInCheck(square:  kingPosition, model.board) {
                 print("\(model.currentTurnColor) is Checkmate")
                 model.isCheckMate = model.currentTurnColor
             }else {
@@ -197,4 +190,37 @@ class  Rule {
     
     
     
+    
+    func isKingInCheck(square: Coordinates, _ board: Model.BoardClass) -> Bool {
+        let kingColor = getColorsFromCoords(square, board)
+        let opponentColor: Model.ChessColor = kingColor == .white ? .black : .white
+        for (piece,cooridnates) in getPiecesForColor(color: opponentColor, board: board) {
+            let rule = Rule.getRuleByChessPiece(model: model, color: opponentColor, chessPiece: piece.chessPiece)
+            
+            if rule.getThreatenPieces(cooridnates, board).contains(square) {
+                return true
+            }
+        }
+        
+        
+        return false
+    }
+    
+    
+    
+    func getPiecesForColor(color: Model.ChessColor, board: Model.BoardClass) -> [(Model.Piece, Coordinates)] {
+        var pieces:[(Model.Piece, Coordinates)] = []
+        
+        for (rowIndex, row) in board.enumerated() {
+            for(colIndex, column) in row.enumerated() {
+                if (column != nil && column!.chessColor == color) {
+                    pieces.append((column!, Coordinates(row: rowIndex, column: colIndex)))
+                }
+            }
+        }
+        return pieces
+    }
+    
 }
+
+
