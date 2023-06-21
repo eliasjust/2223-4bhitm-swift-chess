@@ -16,6 +16,10 @@ class ViewModel: ObservableObject {
     typealias ChessColor = Model.ChessColor
     typealias ChessPiece = Model.ChessPiece
     typealias Coordinates = Model.Coordinate
+    typealias PieceDto = Model.PieceDto
+    typealias GameDTO = Model.GameDto
+
+
     let defaultBlackKingPos = Coordinates(row: 0, column: 4)
     
     let defaultWhiteKingPos = Coordinates(row: 7, column: 4)
@@ -63,7 +67,11 @@ class ViewModel: ObservableObject {
         model.board
     }
     
-    var currentTurnColor: ChessColor = .white
+    var currentTurnColor: ChessColor {
+        model.currentTurnColor
+    }
+    
+    
     ///needed for en passant
     var pawnMadeTwoMovesSquare: Coordinates? = nil
     
@@ -168,7 +176,8 @@ class ViewModel: ObservableObject {
         model.board[from.row][from.column] = nil
         let piece = getChessPiece(to, board)
         
-        currentTurnColor = (currentTurnColor == .white) ? .black : .white
+        model.currentTurnColor = (currentTurnColor == .white) ? .black : .white
+        sendBoard(board: board)
     }
     
     
@@ -222,7 +231,9 @@ class ViewModel: ObservableObject {
         let rule = Rule(model: model, maxReach: 7, directions: [], color: currentTurnColor)
         return rule.getValidMoves(position: position)
     }
-
+    
+    
+    
     
     func promotePawn(square:Coordinates, _ board: BoardClass) -> Void {
         // let piece =  Piece(chessPiece: .queen, chessColor: getColorsFromCoords(square, board))
@@ -269,13 +280,20 @@ class ViewModel: ObservableObject {
     
     func restartGame() -> Void {
         model = Model()
-        currentTurnColor = .white
+        model.currentTurnColor = .white
         pawnMadeTwoMovesSquare = nil
         model.initialGameState = true
+        self.sendBoard(board: board)
+        self.fetchBoardState() {
+
+        }
     }
     
     func startGame() -> Void {
         model.initialGameState = false
+        startUpdatingBoard()
+
+        self.sendBoard(board: board)
         self.fetchBoardState() {
             
         }
@@ -286,7 +304,7 @@ class ViewModel: ObservableObject {
         fetchQueue.async {
             if let data = ViewModel.loadBoardState(){
                 DispatchQueue.main.async {
-                    self.model.updateBoardFromJson(data: data)
+                    self.updateBoardFromJson(data: data)
                     completion()
                 }
             }
@@ -301,7 +319,126 @@ class ViewModel: ObservableObject {
         return data
     }
 
-    
+    func updateBoardFromJson(data: Data) {
+
+        /*
+
+         print json to string:
+         do {
+         print(try JSONSerialization.jsonObject(with: data, options: [])  )
+
+         } catch {
+
+         print("can not convert")
+         }
+
+
+
+         print array to json:
+         var testBoard: [[PieceDto]] = [[
+         PieceDto(chessColor: "test2", chessPiece: "test2")
+         ]]
+
+
+         do {
+         let jsonData = try JSONEncoder().encode(testBoard)
+         if let jsonString = String(data: jsonData, encoding: .utf8) {
+         print(jsonString)
+         }
+         } catch {
+         print("Error converting array to JSON: \(error.localizedDescription)")
+         }
+
+
+         */
+        if let databaseGame = try? JSONDecoder().decode(GameDTO.self, from: data){
+
+            model.currentTurnColor = Model.ChessColor(rawValue: databaseGame.currentTurnColor) ?? .white
+            let databaseBoard = databaseGame.board
+
+            var finalBoard: BoardClass = Array(repeating: Array(repeating: nil, count: 8), count: 8)
+            for (i, row) in databaseBoard.enumerated() {
+                for (j, col) in row.enumerated() {
+                    if let pieceString = col {
+                        if let chessPiece = Model.ChessPiece(rawValue: pieceString.chessPiece),
+                           let chessColor = Model.ChessColor(rawValue: pieceString.chessColor) {
+
+
+                            let validPiece = Piece(chessPiece: chessPiece, chessColor: chessColor)
+                            finalBoard[i][j] = validPiece
+                        }else {
+                            finalBoard[i][j] = nil
+                        }
+                    }
+
+                }
+            }
+            model.board = finalBoard
+        }
+    }
+
+
+    var timer: Timer?
+
+    func startUpdatingBoard() {
+        timer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { [weak self] _ in
+            self?.updateBoard()
+        }
+    }
+
+    func stopUpdatingBoard() {
+        timer?.invalidate()
+        timer = nil
+    }
+
+    func updateBoard() {
+        self.fetchBoardState() {
+
+        }
+    }
+
+    func sendBoard(board: BoardClass) -> Void {
+        let boardDto = toBoardDto(board: board)
+        let gameDto = GameDTO(currentTurnColor: model.currentTurnColor.rawValue, board: boardDto)
+
+        guard let data = try? JSONEncoder().encode(gameDto) else {
+            print("Failed to encode board")
+            return
+        }
+
+        guard let url = URL(string: databaseUri) else {
+            print("Invalid URL")
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        request.httpBody = data
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                print("Error sending data: \(error)")
+            } else if let response = response as? HTTPURLResponse, response.statusCode != 200 {
+                print("Unexpected status code: \(response.statusCode)")
+            } else {
+                print("Data sent successfully")
+            }
+        }
+        task.resume()
+    }
+
+    func toBoardDto(board: BoardClass) -> [[PieceDto?]] {
+        var id = 0;
+        return board.map { row in
+            row.map { piece in
+                id = id+1
+                guard let piece = piece else {
+                    return PieceDto(chessColor: "", chessPiece: "")                   }
+                return PieceDto(chessColor: piece.chessColor.rawValue, chessPiece: piece.chessPiece.rawValue)
+            }
+        }
+    }
     
 }
 /**

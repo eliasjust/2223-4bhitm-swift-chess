@@ -1,183 +1,279 @@
 {
+  "game": {
     "board": [
-        [
-            {
-                "chessColor": "black",
-                "chessPiece": "rook"
-            },
-            {
-                "chessColor": "black",
-                "chessPiece": "knight"
-            },
-            {
-                "chessColor": "black",
-                "chessPiece": "bishop"
-            },
-            {
-                "chessColor": "black",
-                "chessPiece": "queen"
-            },
-            {
-                "chessColor": "black",
-                "chessPiece": "king"
-            },
-            {
-                "chessColor": "black",
-                "chessPiece": "bishop"
-            },
-            {
-                "chessColor": "black",
-                "chessPiece": "knight"
-            },
-            {
-                "chessColor": "black",
-                "chessPiece": "rook"
-            }
-        ],
-        [
-            {
-                "chessColor": "black",
-                "chessPiece": "pawn"
-            },
-            {
-                "chessColor": "black",
-                "chessPiece": "pawn"
-            },
-            {
-                "chessColor": "black",
-                "chessPiece": "pawn"
-            },
-            {
-                "chessColor": "black",
-                "chessPiece": "pawn"
-            },
-            {
-                "chessColor": "black",
-                "chessPiece": "pawn"
-            },
-            {
-                "chessColor": "black",
-                "chessPiece": "pawn"
-            },
-            {
-                "chessColor": "black",
-                "chessPiece": "pawn"
-            },
-            {
-                "chessColor": "black",
-                "chessPiece": "pawn"
-            }
-        ],
-        [
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-        ],
-        [
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-        ],
-        [
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-        ],
-        [
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            {
-                "chessColor": "white",
-                "chessPiece": "pawn"
-            }
-        ],
-        [
-            {
-                "chessColor": "white",
-                "chessPiece": "pawn"
-            },
-            {
-                "chessColor": "white",
-                "chessPiece": "pawn"
-            },
-            {
-                "chessColor": "white",
-                "chessPiece": "pawn"
-            },
-            {
-                "chessColor": "white",
-                "chessPiece": "pawn"
-            },
-            {
-                "chessColor": "white",
-                "chessPiece": "pawn"
-            },
-            {
-                "chessColor": "white",
-                "chessPiece": "pawn"
-            },
-            {
-                "chessColor": "white",
-                "chessPiece": "pawn"
-            },
-            {
-                "chessColor": "white",
-                "chessPiece": "pawn"
-            }
-        ],
-        [
-            {
-                "chessColor": "white",
-                "chessPiece": "rook"
-            },
-            {
-                "chessColor": "white",
-                "chessPiece": "knight"
-            },
-            {
-                "chessColor": "white",
-                "chessPiece": "bishop"
-            },
-            {
-                "chessColor": "white",
-                "chessPiece": "queen"
-            },
-            {
-                "chessColor": "white",
-                "chessPiece": "king"
-            },
-            {
-                "chessColor": "white",
-                "chessPiece": "bishop"
-            },
-            {
-                "chessColor": "white",
-                "chessPiece": "knight"
-            },
-            {
-                "chessColor": "white",
-                "chessPiece": "rook"
-            }
-        ]
-    ]
+      [
+        {
+          "chessColor": "black",
+          "chessPiece": "rook"
+        },
+        {
+          "chessColor": "black",
+          "chessPiece": "knight"
+        },
+        {
+          "chessColor": "black",
+          "chessPiece": "bishop"
+        },
+        {
+          "chessColor": "black",
+          "chessPiece": "queen"
+        },
+        {
+          "chessColor": "black",
+          "chessPiece": "king"
+        },
+        {
+          "chessColor": "black",
+          "chessPiece": "bishop"
+        },
+        {
+          "chessColor": "black",
+          "chessPiece": "knight"
+        },
+        {
+          "chessColor": "black",
+          "chessPiece": "rook"
+        }
+      ],
+      [
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "black",
+          "chessPiece": "pawn"
+        },
+        {
+          "chessColor": "black",
+          "chessPiece": "pawn"
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "white",
+          "chessPiece": "queen"
+        },
+        {
+          "chessColor": "black",
+          "chessPiece": "pawn"
+        },
+        {
+          "chessColor": "black",
+          "chessPiece": "pawn"
+        }
+      ],
+      [
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "black",
+          "chessPiece": "pawn"
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        }
+      ],
+      [
+        {
+          "chessColor": "black",
+          "chessPiece": "pawn"
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "black",
+          "chessPiece": "pawn"
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        }
+      ],
+      [
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "white",
+          "chessPiece": "bishop"
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "white",
+          "chessPiece": "pawn"
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        }
+      ],
+      [
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        }
+      ],
+      [
+        {
+          "chessColor": "white",
+          "chessPiece": "pawn"
+        },
+        {
+          "chessColor": "white",
+          "chessPiece": "pawn"
+        },
+        {
+          "chessColor": "white",
+          "chessPiece": "pawn"
+        },
+        {
+          "chessColor": "white",
+          "chessPiece": "pawn"
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "white",
+          "chessPiece": "pawn"
+        },
+        {
+          "chessColor": "white",
+          "chessPiece": "pawn"
+        },
+        {
+          "chessColor": "white",
+          "chessPiece": "pawn"
+        }
+      ],
+      [
+        {
+          "chessColor": "white",
+          "chessPiece": "rook"
+        },
+        {
+          "chessColor": "white",
+          "chessPiece": "knight"
+        },
+        {
+          "chessColor": "white",
+          "chessPiece": "bishop"
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "white",
+          "chessPiece": "king"
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "white",
+          "chessPiece": "knight"
+        },
+        {
+          "chessColor": "white",
+          "chessPiece": "rook"
+        }
+      ]
+    ],
+    "currentTurnColor": "black"
+  }
 }

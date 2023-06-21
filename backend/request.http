@@ -1,0 +1,197 @@
+
+###
+http://localhost:3000/game
+
+###
+## Post
+
+PUT http://localhost:3000/game
+Content-Type: application/json
+Accept: application/json
+
+{
+  "board": [
+    [
+      {
+        "chessColor": "black",
+        "chessPiece": "rook"
+      },
+      {
+        "chessColor": "black",
+        "chessPiece": "knight"
+      },
+      {
+        "chessColor": "black",
+        "chessPiece": "bishop"
+      },
+      {
+        "chessColor": "black",
+        "chessPiece": "queen"
+      },
+      {
+        "chessColor": "black",
+        "chessPiece": "king"
+      },
+      {
+        "chessColor": "black",
+        "chessPiece": "bishop"
+      },
+      {
+        "chessColor": "black",
+        "chessPiece": "knight"
+      },
+      {
+        "chessColor": "black",
+        "chessPiece": "rook"
+      }
+    ],
+    [
+      {
+        "chessColor": "black",
+        "chessPiece": "pawn"
+      },
+      {
+        "chessColor": "black",
+        "chessPiece": "pawn"
+      },
+      {
+        "chessColor": "black",
+        "chessPiece": "pawn"
+      },
+      {
+        "chessColor": "black",
+        "chessPiece": "pawn"
+      },
+      {
+        "chessColor": "black",
+        "chessPiece": "pawn"
+      },
+      {
+        "chessColor": "black",
+        "chessPiece": "pawn"
+      },
+      {
+        "chessColor": "black",
+        "chessPiece": "pawn"
+      },
+      {
+        "chessColor": "black",
+        "chessPiece": "pawn"
+      }
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      {
+        "chessColor": "white",
+        "chessPiece": "pawn"
+      }
+    ],
+    [
+      {
+        "chessColor": "white",
+        "chessPiece": "pawn"
+      },
+      {
+        "chessColor": "white",
+        "chessPiece": "pawn"
+      },
+      {
+        "chessColor": "white",
+        "chessPiece": "pawn"
+      },
+      {
+        "chessColor": "white",
+        "chessPiece": "pawn"
+      },
+      {
+        "chessColor": "white",
+        "chessPiece": "pawn"
+      },
+      {
+        "chessColor": "white",
+        "chessPiece": "pawn"
+      },
+      {
+        "chessColor": "white",
+        "chessPiece": "pawn"
+      },
+      {
+        "chessColor": "white",
+        "chessPiece": "pawn"
+      }
+    ],
+    [
+      {
+        "chessColor": "white",
+        "chessPiece": "rook"
+      },
+      {
+        "chessColor": "white",
+        "chessPiece": "knight"
+      },
+      {
+        "chessColor": "white",
+        "chessPiece": "bishop"
+      },
+      {
+        "chessColor": "white",
+        "chessPiece": "queen"
+      },
+      {
+        "chessColor": "white",
+        "chessPiece": "king"
+      },
+      {
+        "chessColor": "white",
+        "chessPiece": "bishop"
+      },
+      {
+        "chessColor": "white",
+        "chessPiece": "knight"
+      },
+      {
+        "chessColor": "white",
+        "chessPiece": "rook"
+      }
+    ]
+  ]
+}
+
+
+
