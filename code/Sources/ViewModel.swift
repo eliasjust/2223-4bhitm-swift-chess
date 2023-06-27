@@ -123,7 +123,7 @@ class ViewModel: ObservableObject {
             
             
             
-            model.currentTurnColor = model.currentTurnColor == .white ? .black : .white
+           // model.currentTurnColor = model.currentTurnColor == .white ? .black : .white
             
             let gameOverRule = Rule(model: model, maxReach: 7, directions: [], color: model.currentTurnColor)
             gameOverRule.handleGameStatus()
@@ -219,17 +219,25 @@ class ViewModel: ObservableObject {
         capturePiece(piece)
     }
     
-    
+    /**
+     Verifies if a move from one position to another is valid.
+
+     - Parameters:
+       - fromPosition: The starting position.
+       - toPosition: The desired ending position.
+     - Returns: A boolean value indicating whether the move is valid (`true`) or not (`false`).
+    */
     func moveIsValid(fromPosition:Coordinates, toPosition:Coordinates) -> Bool {
-        return getValidMoves(position: fromPosition).contains(where: {$0.column == toPosition.column && $0.row == toPosition.row})
+        return getAllValidMoves(position: fromPosition).contains(where: {$0.column == toPosition.column && $0.row == toPosition.row})
         
     }
     
     
     
-    func getValidMoves(position:Coordinates) -> [Coordinates] {
+    func getAllValidMoves(position:Coordinates) -> [Coordinates] {
         let rule = Rule(model: model, maxReach: 7, directions: [], color: currentTurnColor)
-        return rule.getValidMoves(position: position)
+        
+        return rule.getAllValidMovesForSquare(square: position)
     }
     
     
@@ -292,7 +300,7 @@ class ViewModel: ObservableObject {
     func startGame() -> Void {
         model.initialGameState = false
         startUpdatingBoard()
-
+        
         self.sendBoard(board: board)
         self.fetchBoardState() {
             
@@ -321,36 +329,6 @@ class ViewModel: ObservableObject {
 
     func updateBoardFromJson(data: Data) {
 
-        /*
-
-         print json to string:
-         do {
-         print(try JSONSerialization.jsonObject(with: data, options: [])  )
-
-         } catch {
-
-         print("can not convert")
-         }
-
-
-
-         print array to json:
-         var testBoard: [[PieceDto]] = [[
-         PieceDto(chessColor: "test2", chessPiece: "test2")
-         ]]
-
-
-         do {
-         let jsonData = try JSONEncoder().encode(testBoard)
-         if let jsonString = String(data: jsonData, encoding: .utf8) {
-         print(jsonString)
-         }
-         } catch {
-         print("Error converting array to JSON: \(error.localizedDescription)")
-         }
-
-
-         */
         if let databaseGame = try? JSONDecoder().decode(GameDTO.self, from: data){
 
             model.currentTurnColor = Model.ChessColor(rawValue: databaseGame.currentTurnColor) ?? .white
@@ -381,7 +359,7 @@ class ViewModel: ObservableObject {
     var timer: Timer?
 
     func startUpdatingBoard() {
-        timer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { [weak self] _ in
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             self?.updateBoard()
         }
     }

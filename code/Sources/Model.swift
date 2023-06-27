@@ -8,8 +8,10 @@
 import Foundation
 
 struct Model {
+    //static let DATABASE = "https://40f0-193-170-159-99.ngrok-free.app/game"
     static let DATABASE = "http://localhost:3000/game"
 
+    
     var playerIsColor: ChessColor = .white
     var initialGameState: Bool = true
     

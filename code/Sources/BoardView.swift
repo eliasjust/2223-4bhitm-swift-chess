@@ -164,7 +164,8 @@ class BoardView: UIView {
             if fromSquare == nil {
    
                 fromSquare = tappedAreaCoordinates
-                drawPredictions(viewmodel.getValidMoves(position: fromSquare!))
+                var a = viewmodel.getAllValidMoves(position: fromSquare!)
+                drawPredictions(viewmodel.getAllValidMoves(position: fromSquare!))
                 squarePreviousColor = colView.backgroundColor
                 colView.backgroundColor = UIColor(cgColor: activeColor)
                 
@@ -211,7 +212,7 @@ class BoardView: UIView {
         drawPieces()
         if fromSquare != nil {
             subviews[fromSquare!.row].subviews[fromSquare!.column].backgroundColor = UIColor(cgColor: activeColor)
-            drawPredictions(viewmodel.getValidMoves(position: fromSquare!))
+            drawPredictions(viewmodel.getAllValidMoves(position: fromSquare!))
             
         }
         

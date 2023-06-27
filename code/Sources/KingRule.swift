@@ -17,7 +17,7 @@ class KingRule:Rule {
             model: model, maxReach: 1, directions: moveDirectionsForPiece[.king]!, color: color)
     }
     override func validMoves(_ position: ViewModel.Coordinates, _ board: Model.BoardClass) -> [ViewModel.Coordinates] {
-        return getThreatenPieces(position, board) + getValidRochadeSquares(position)
+        return super.validMoves(position, board) + getValidRochadeSquares(position)
 
     }
     

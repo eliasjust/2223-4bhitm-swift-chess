@@ -65,64 +65,30 @@
           "chessPiece": "pawn"
         },
         {
-          "chessColor": "black",
-          "chessPiece": "pawn"
-        }
-      ],
-      [
-        {
-          "chessColor": "",
-          "chessPiece": ""
-        },
-        {
-          "chessColor": "black",
-          "chessPiece": "pawn"
-        },
-        {
-          "chessColor": "",
-          "chessPiece": ""
-        },
-        {
-          "chessColor": "",
-          "chessPiece": ""
-        },
-        {
-          "chessColor": "",
-          "chessPiece": ""
-        },
-        {
-          "chessColor": "",
-          "chessPiece": ""
-        },
-        {
-          "chessColor": "",
-          "chessPiece": ""
-        },
-        {
           "chessColor": "",
           "chessPiece": ""
         }
       ],
       [
         {
-          "chessColor": "black",
-          "chessPiece": "pawn"
-        },
-        {
-          "chessColor": "",
-          "chessPiece": ""
-        },
-        {
-          "chessColor": "",
-          "chessPiece": ""
-        },
-        {
           "chessColor": "",
           "chessPiece": ""
         },
         {
           "chessColor": "black",
           "chessPiece": "pawn"
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
         },
         {
           "chessColor": "",
@@ -141,6 +107,40 @@
         {
           "chessColor": "",
           "chessPiece": ""
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "black",
+          "chessPiece": "pawn"
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        },
+        {
+          "chessColor": "",
+          "chessPiece": ""
+        }
+      ],
+      [
+        {
+          "chessColor": "black",
+          "chessPiece": "pawn"
         },
         {
           "chessColor": "",

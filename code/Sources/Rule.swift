@@ -13,7 +13,7 @@ class  Rule {
     var directions: [Direction]
     var model: Model
     var board: Model.BoardClass {model.board}
-    var color:Model.ChessColor
+    var color: Model.ChessColor
     
     init(model: Model, maxReach:Int, directions:[Direction], color: Model.ChessColor) {
         self.model = model
@@ -24,10 +24,7 @@ class  Rule {
     
     
     //change to mapper
-    func getValidMovesWithDirections(_ square: Coordinates,_ board:Model.BoardClass) -> [Coordinates] {
-        
-        
-        
+    func getValidMovesWithDirections(_ square: Coordinates,_ board: Model.BoardClass) -> [Coordinates] {
         var validMoves: [Coordinates] = []
         guard let movingPiece = board[square.row][square.column]  else {return validMoves}
         
@@ -35,7 +32,7 @@ class  Rule {
             var count = 0
             var newCoord = Coordinates(row: square.row + direction.x, column: square.column + direction.y)
             
-            while isValidCoordinate(cord: newCoord, color: movingPiece.chessColor) && count < maxReach {
+            while isValidCoordinate(cord: newCoord, color: movingPiece.chessColor, board) && count < maxReach {
                 validMoves.append(newCoord)
                 
                 if board[newCoord.row][newCoord.column] != nil {break}
@@ -51,7 +48,7 @@ class  Rule {
     
     
     /// validates that coordinates are on the board and the square there is not a piece with the same color
-    func isValidCoordinate(cord: Coordinates, color: Model.ChessColor) -> Bool {
+    func isValidCoordinate(cord: Coordinates, color: Model.ChessColor, _ board: Model.BoardClass) -> Bool {
         return cord.row >= 0 && cord.row < 8 && cord.column >= 0 && cord.column < 8 && color != board[cord.row][cord.column]?.chessColor
     }
     
@@ -82,31 +79,45 @@ class  Rule {
     }
     
     
-    func getThreatenPieces( _ position:Coordinates, _ board: Model.BoardClass) -> [Coordinates] {
+    func getThreatenPieces(_ position:Coordinates, _ board: Model.BoardClass) -> [Coordinates] {
         return getValidMovesWithDirections(position, board)
     }
     
     
-    static func getRuleByChessPiece(model:Model,color:Model.ChessColor,chessPiece:Model.ChessPiece) -> Rule {
-        
-        
-        
+    static func getRuleByChessPiece(model: Model, color: Model.ChessColor, chessPiece: Model.ChessPiece) -> Rule {
+    
         let allRules:[Model.ChessPiece: Rule] = [
             .king: KingRule(model: model, color: color),
-            .pawn: PawnRule(model:model, color: color),
-            .queen: QueenRule(model:model,color:color),
-            .knight: KnightRule(model:model,color:color),
-            .rook: RookRule(model:model, color:color),
-            .bishop: BishopRule(model:model, color: color)
+            .pawn: PawnRule(model: model, color: color),
+            .queen: QueenRule(model: model, color: color),
+            .knight: KnightRule(model: model, color: color),
+            .rook: RookRule(model: model, color: color),
+            .bishop: BishopRule(model: model, color: color)
         ]
         return allRules[chessPiece]!
     }
     
     
-    
+    /**
+     Filters the given possible moves for a piece to only include moves that do not result in the king being in check.
+
+     - Parameters:
+        - from: The current coordinates of the piece.
+        - moves: An array containing all the potential moves for the piece.
+        - board: The current state of the chess board.
+        
+     - Returns: An array of `Coordinates` representing the valid moves where the king is not in check.
+
+     This function works by creating a hypothetical board for each possible move, and then checking if the king would be in check on that hypothetical board. Only the moves that do not result in the king being in check are returned.
+
+    */
     func getMovesThatAreNotInCheck(from: Coordinates, moves: [Coordinates], _ board:Model.BoardClass) -> [Coordinates] {
         return moves.filter {
             let hypotheticalBoard =  hypotheticalMove(from: from, to: $0)
+            if $0.column == 5 && $0.row == 1 {
+                var a = !isKingInCheck(square: findKing(model.currentTurnColor, hypotheticalBoard), hypotheticalBoard)
+                print(!isKingInCheck(square: findKing(model.currentTurnColor, hypotheticalBoard), hypotheticalBoard))
+            }
             return !isKingInCheck(square: findKing(model.currentTurnColor, hypotheticalBoard), hypotheticalBoard)
         }
     }
@@ -123,32 +134,25 @@ class  Rule {
     }
     
     
-    func getValidMoves(position:Coordinates) -> [Coordinates] {
-        typealias MoveFunction = (Coordinates,_  board: Model.BoardClass) -> [Coordinates]
-        
-        let kingRule = KingRule(model: model, color: model.currentTurnColor)
-        let piece = getChessPiece(position)
+    func getAllValidMovesForSquare(square: Coordinates) -> [Coordinates] {
+        typealias MoveFunction = (Coordinates, _ board: Model.BoardClass) -> [Coordinates]
+        let board = board
+        let piece = getChessPiece(square)
         let ruleForThePiece = Rule.getRuleByChessPiece(model: model, color: piece.chessColor, chessPiece: piece.chessPiece)
         
-        let validMoves: [Coordinates] = ruleForThePiece.validMoves(position, board)
-        return kingRule.getMovesThatAreNotInCheck(from: position, moves: validMoves, board)
+        let validMovesForPiece: [Coordinates] = ruleForThePiece.validMoves(square, board)
         
- 
+        var a = getMovesThatAreNotInCheck(from: square, moves: validMovesForPiece, board)
+        return getMovesThatAreNotInCheck(from: square, moves: validMovesForPiece, board)
     }
     
     
-    func getAllValidMoves(model: Model) -> [Coordinates] {
+    func getAllValidMoves(model: Model, forColor: Model.ChessColor) -> [Coordinates] {
         var validSquares: [Coordinates] = []
-        
-        
-        getPiecesForColor(color: model.currentTurnColor, board: model.board).forEach{
-            validSquares += getValidMoves(position: $0.1)
+        getPiecesForColor(color: forColor, board: model.board).forEach{
+            validSquares += getAllValidMovesForSquare(square: $0.1)
         }
-       
-        
-        
         return validSquares
-        
     }
     
     func findKing(_ color: Model.ChessColor, _ board: Model.BoardClass) -> Coordinates {
@@ -166,11 +170,12 @@ class  Rule {
     
     
     func handleGameStatus() -> Void  {
-        let kingPosition = findKing(model.currentTurnColor, model.board)
-        print("Current position for the \(model.currentTurnColor) king \(kingPosition)" )
-        let isThereValidMoves = getAllValidMoves(model: model).isEmpty
-        print(isThereValidMoves)
-        if isThereValidMoves {
+        var forColor: Model.ChessColor
+        forColor = model.currentTurnColor
+        let kingPosition = findKing(forColor, model.board)
+        print("Current position for the \(forColor) king \(kingPosition)")
+        let areNoThereValidMoves = getAllValidMoves(model: model, forColor: forColor).isEmpty
+        if areNoThereValidMoves {
             let rule = Rule(model: model, maxReach: 7, directions: [], color: model.currentTurnColor)
             if  rule.isKingInCheck(square:  kingPosition, model.board) {
                 print("\(model.currentTurnColor) is Checkmate")
@@ -195,8 +200,13 @@ class  Rule {
         let kingColor = getColorsFromCoords(square, board)
         let opponentColor: Model.ChessColor = kingColor == .white ? .black : .white
         for (piece,cooridnates) in getPiecesForColor(color: opponentColor, board: board) {
-            let rule = Rule.getRuleByChessPiece(model: model, color: opponentColor, chessPiece: piece.chessPiece)
             
+            
+            let rule = Rule.getRuleByChessPiece(model: model, color: opponentColor, chessPiece: piece.chessPiece)
+        
+            if cooridnates.row == 4 && cooridnates.column == 2 {
+                print("")
+            }
             if rule.getThreatenPieces(cooridnates, board).contains(square) {
                 return true
             }
