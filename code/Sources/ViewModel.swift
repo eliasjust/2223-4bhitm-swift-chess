@@ -12,6 +12,7 @@ class ViewModel: ObservableObject {
     
     @Published private(set) var model =  Model()
     
+    
     typealias Piece = Model.Piece
     typealias ChessColor = Model.ChessColor
     typealias ChessPiece = Model.ChessPiece
@@ -50,9 +51,7 @@ class ViewModel: ObservableObject {
         model.isCheckMate == .white
     }
     
-    var gameIsEnded: Bool {
-        model.gameIsEnded
-    }
+    var gameIsEnded = false;
     
     var pawnPromotes:Coordinates? {
         model.pawnPromotes
@@ -125,13 +124,32 @@ class ViewModel: ObservableObject {
            // model.currentTurnColor = model.currentTurnColor == .white ? .black : .white
             
             let gameOverRule = Rule(model: model, maxReach: 7, directions: [], color: model.currentTurnColor)
-            gameOverRule.handleGameStatus()
-            
-            
-            
-            
+          handleGameStatus()
+       
         }
     }
+    
+    
+    func handleGameStatus() -> Void  {
+        let turnColor = model.currentTurnColor
+        let rule = Rule(model: model, maxReach: 7, directions: [], color: model.currentTurnColor)
+        let kingPosition = rule.findKing(turnColor, model.board)
+        let areNoThereValidMoves = rule.getAllValidMoves(model: model, forColor: turnColor).isEmpty
+        if areNoThereValidMoves {
+            let rule = Rule(model: model, maxReach: 7, directions: [], color: turnColor)
+            if rule.isKingInCheck(square:  kingPosition, model.board) {
+                print("\(model.currentTurnColor) is Checkmate")
+                print(turnColor)
+                model.isCheckMate = turnColor
+            }else {
+                model.isDraw = true
+                print("it ist Draw")
+            }
+        }
+    }
+    
+    
+    
     
     func rookOrKingMoved(from: Coordinates, to: Coordinates, chessPiece: ChessPiece) -> Void {
         
