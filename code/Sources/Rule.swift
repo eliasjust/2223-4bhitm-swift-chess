@@ -11,7 +11,7 @@ class  Rule {
     typealias Coordinates = ViewModel.Coordinates
     var maxReach: Int
     var directions: [Direction]
-    var model: Model
+    @Published var model: Model
     var board: Model.BoardClass {model.board}
     var color: Model.ChessColor
     
@@ -171,6 +171,7 @@ class  Rule {
             let rule = Rule(model: model, maxReach: 7, directions: [], color: turnColor)
             if rule.isKingInCheck(square:  kingPosition, model.board) {
                 print("\(model.currentTurnColor) is Checkmate")
+                print(turnColor)
                 model.isCheckMate = turnColor
             }else {
                 model.isDraw = true

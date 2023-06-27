@@ -85,9 +85,11 @@ struct ContentView: View {
                 }
                 
             }
- 
+             
             
+              
             viewForGameOver().background(.bar).cornerRadius(20).padding()
+            
             if let _ = viewmodel.pawnPromotes {
                 pawnPromotionView()
             }
@@ -111,7 +113,7 @@ struct ContentView: View {
     
     @ViewBuilder
     func viewForGameOver() -> some View {
-        if viewmodel.gameIsEnded {
+        if viewmodel.model.gameIsEnded {
 
             VStack {
                 Text(viewmodel.whiteIsCheckMate ? "black is the winner" : (viewmodel.blackIsCheckMate ?  "white is the winner" : "Its a Draw"))
@@ -120,7 +122,7 @@ struct ContentView: View {
                 
                 
                 Button("Restart Game", action: viewmodel.restartGame).padding().buttonStyle(.bordered).font(Font.title)
-            }.buttonBorderShape(.roundedRectangle)
+            }.buttonBorderShape(.roundedRectangle).padding()
             
             
         }
