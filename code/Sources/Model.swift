@@ -21,6 +21,9 @@ struct Model {
     typealias BoardClass = [[Piece?]]
     var board: BoardClass
     
+    var gameIsEnded: Bool {
+       isCheckMate != nil || isDraw == true
+    }
     struct GameDto: Codable, Hashable {
         var currentTurnColor: String
         var board: [[PieceDto?]]

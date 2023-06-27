@@ -50,12 +50,9 @@ class ViewModel: ObservableObject {
         model.isCheckMate == .white
     }
     
-    
-    var gameIsEnded:Bool {
-        model.isCheckMate != nil || model.isDraw == true
+    var gameIsEnded: Bool {
+        model.gameIsEnded
     }
-    
-    
     
     var pawnPromotes:Coordinates? {
         model.pawnPromotes
@@ -73,7 +70,9 @@ class ViewModel: ObservableObject {
     
     
     ///needed for en passant
-    var pawnMadeTwoMovesSquare: Coordinates? = nil
+    var pawnMadeTwoMovesSquare: Coordinates? {
+        model.pawnMadeTwoMovesSquare
+    }
     
     
     func isKingInCheck(position: Coordinates) -> Bool {
@@ -108,7 +107,7 @@ class ViewModel: ObservableObject {
             case .pawn:
                 pawnWillMove(fromSquare: fromPosition, toSquare:  toPosition)
             default:
-                pawnMadeTwoMovesSquare = nil
+                model.pawnMadeTwoMovesSquare = nil
             }
             
             
@@ -191,16 +190,15 @@ class ViewModel: ObservableObject {
         return
     }
     
-    func pawnWillMove(fromSquare:Coordinates, toSquare:Coordinates ) -> Void {
-        
+    func pawnWillMove(fromSquare: Coordinates, toSquare: Coordinates ) -> Void {
         if fromSquare.column != toSquare.column && board[toSquare.row][toSquare.column] == nil {
             captureEnPasant(square: pawnMadeTwoMovesSquare!)
         }
-        pawnMadeTwoMovesSquare = nil
         
+        model.pawnMadeTwoMovesSquare = nil
         /// pawn moved two squares
         if fromSquare.row == 1 && toSquare.row == 3 || fromSquare.row == 6 && toSquare.row == 4 {
-            pawnMadeTwoMovesSquare = toSquare
+            model.pawnMadeTwoMovesSquare = toSquare
         }
         
     }
@@ -289,7 +287,7 @@ class ViewModel: ObservableObject {
     func restartGame() -> Void {
         model = Model()
         model.currentTurnColor = .white
-        pawnMadeTwoMovesSquare = nil
+        model.pawnMadeTwoMovesSquare = nil
         model.initialGameState = true
         self.sendBoard(board: board)
         self.fetchBoardState() {
@@ -303,7 +301,6 @@ class ViewModel: ObservableObject {
         
         self.sendBoard(board: board)
         self.fetchBoardState() {
-            
         }
     }
     
@@ -418,7 +415,7 @@ class ViewModel: ObservableObject {
         }
     }
     
+    
+    
 }
-/**
- 
- */
+

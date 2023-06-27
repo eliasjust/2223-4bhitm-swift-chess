@@ -23,7 +23,6 @@ struct ContentView: View {
                 StartView(viewModel: viewmodel)
             } else {
                 if orientation.isLandscape {
-                    
                     HStack {
                         
                         ChessBoardViewControllerWrapper(viewmodel: viewmodel).aspectRatio(1, contentMode: .fit)
@@ -47,7 +46,7 @@ struct ContentView: View {
                         Spacer()
                         
                         
-                    }.padding().blur(radius: viewmodel.gameIsEnded ? 10 : 0)
+                    }.padding().blur(radius: viewmodel.model.gameIsEnded ? 10 : 0)
 
 
                 }
@@ -82,7 +81,7 @@ struct ContentView: View {
         if viewmodel.gameIsEnded {
 
             VStack {
-                Text(viewmodel.whiteIsCheckMate ? "Black is Winner" : (viewmodel.blackIsCheckMate ?  "White is Winner" : "Its a Draw"))
+                Text(viewmodel.whiteIsCheckMate ? "black is the winner" : (viewmodel.blackIsCheckMate ?  "white is the winner" : "Its a Draw"))
                     .font(Font.largeTitle)
                     .bold()
                 

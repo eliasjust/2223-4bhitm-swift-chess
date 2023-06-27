@@ -141,8 +141,6 @@ class  Rule {
         let ruleForThePiece = Rule.getRuleByChessPiece(model: model, color: piece.chessColor, chessPiece: piece.chessPiece)
         
         let validMovesForPiece: [Coordinates] = ruleForThePiece.validMoves(square, board)
-        
-        var a = getMovesThatAreNotInCheck(from: square, moves: validMovesForPiece, board)
         return getMovesThatAreNotInCheck(from: square, moves: validMovesForPiece, board)
     }
     
@@ -170,16 +168,14 @@ class  Rule {
     
     
     func handleGameStatus() -> Void  {
-        var forColor: Model.ChessColor
-        forColor = model.currentTurnColor
-        let kingPosition = findKing(forColor, model.board)
-        print("Current position for the \(forColor) king \(kingPosition)")
-        let areNoThereValidMoves = getAllValidMoves(model: model, forColor: forColor).isEmpty
+        let turnColor = model.currentTurnColor
+        let kingPosition = findKing(turnColor, model.board)
+        let areNoThereValidMoves = getAllValidMoves(model: model, forColor: turnColor).isEmpty
         if areNoThereValidMoves {
-            let rule = Rule(model: model, maxReach: 7, directions: [], color: model.currentTurnColor)
-            if  rule.isKingInCheck(square:  kingPosition, model.board) {
+            let rule = Rule(model: model, maxReach: 7, directions: [], color: turnColor)
+            if rule.isKingInCheck(square:  kingPosition, model.board) {
                 print("\(model.currentTurnColor) is Checkmate")
-                model.isCheckMate = model.currentTurnColor
+                model.isCheckMate = turnColor
             }else {
                 model.isDraw = true
                 print("it ist Draw")

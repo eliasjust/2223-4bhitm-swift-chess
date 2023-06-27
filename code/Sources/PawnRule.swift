@@ -24,30 +24,32 @@ class PawnRule: Rule {
         )
     }
     
-    override func validMoves(_ position:Coordinates, _ board: Model.BoardClass) -> [Coordinates] {
-        var coordinates: [Coordinates] = [Coordinates]()
+    override func validMoves(_ position: Coordinates, _ board: Model.BoardClass) -> [Coordinates] {
+        var frontSquares: [Coordinates] = [Coordinates]()
         
         
         let pieceColor = getColorsFromCoords(position, board)
         let (direction, baseRow) = pieceColor == .white ? (-1, 6) : (1, 1)
         
         if board[position.row + direction][position.column] == nil {
-            coordinates.append(Coordinates(row: position.row + direction, column: position.column))
+            frontSquares.append(Coordinates(row: position.row + direction, column: position.column))
             if position.row == baseRow && board[position.row + direction * 2][position.column] == nil  {
-                coordinates.append(Coordinates(row: position.row + direction * 2, column: position.column))
+                frontSquares.append(Coordinates(row: position.row + direction * 2, column: position.column))
             }
         }
         
         /// all for en passant
-        return coordinates + getThreatenPieces(position, board).compactMap { $0 }.filter { coord -> Bool in
-            if board[coord.row][coord.column] != nil {
+        let captureSquares = getThreatenPieces(position, board).compactMap { $0 }.filter { coord -> Bool in
+            if board[coord.row][coord.column] != nil { // capture when a piece is on the square
                 return true
             } else if let pawnMadeTwoMoves = model.pawnMadeTwoMovesSquare,
                       coord.row == (pawnMadeTwoMoves.row + direction) && coord.column == pawnMadeTwoMoves.column {
                 return true
+                
             }
             return false
         }
+        return frontSquares + captureSquares
     }
     
     
