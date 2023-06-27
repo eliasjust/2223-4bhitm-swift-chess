@@ -173,8 +173,6 @@ class ViewModel: ObservableObject {
     func movePiece(from:Coordinates, to:Coordinates) -> Void {
         model.board[to.row][to.column] = board[from.row][from.column]
         model.board[from.row][from.column] = nil
-        let piece = getChessPiece(to, board)
-        
         model.currentTurnColor = (currentTurnColor == .white) ? .black : .white
         sendBoard(board: board)
     }
@@ -252,12 +250,13 @@ class ViewModel: ObservableObject {
             let piece =  Piece(chessPiece: chosenPiece, chessColor: getColorsFromCoords(pawnPromotes, board))
             model.board[pawnPromotes.row][pawnPromotes.column] = piece
             model.pawnPromotes = nil
+            self.sendBoard(board: board)
         }
     }
     
     
     
-    func getColorsFromCoords(_ coords:Coordinates,_ board: BoardClass) -> ChessColor {
+    func getColorsFromCoords(_ coords:Coordinates, _ board: BoardClass) -> ChessColor {
         board[coords.row][coords.column]!.chessColor
     }
     
