@@ -114,10 +114,6 @@ class  Rule {
     func getMovesThatAreNotInCheck(from: Coordinates, moves: [Coordinates], _ board:Model.BoardClass) -> [Coordinates] {
         return moves.filter {
             let hypotheticalBoard =  hypotheticalMove(from: from, to: $0)
-            if $0.column == 5 && $0.row == 1 {
-                var a = !isKingInCheck(square: findKing(model.currentTurnColor, hypotheticalBoard), hypotheticalBoard)
-                print(!isKingInCheck(square: findKing(model.currentTurnColor, hypotheticalBoard), hypotheticalBoard))
-            }
             return !isKingInCheck(square: findKing(model.currentTurnColor, hypotheticalBoard), hypotheticalBoard)
         }
     }

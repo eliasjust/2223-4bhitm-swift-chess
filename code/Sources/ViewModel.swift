@@ -416,6 +416,28 @@ class ViewModel: ObservableObject {
         }
     }
     
+    func switchBoard(boardTemplate: String) -> Void {
+        let boardBuilder = BoardBuilder()
+        restartGame()
+        switch boardTemplate {
+        case "checkMateTemplate":
+            model.board = boardBuilder.checkMateTemplate()
+        case "promotePawnTemplate":
+            model.board = boardBuilder.promotePawnTemplate()
+        case "rochadeTemplate":
+            
+            model.board = boardBuilder.rochadeTemplate()
+        case "enPassantTemplate":
+            model.board = boardBuilder.enPassantTemplate()
+        default:
+            print("")
+        }
+        startGame()
+
+        
+    }
+
+
     
     
 }

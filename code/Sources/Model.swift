@@ -61,10 +61,9 @@ struct Model {
         case black, white
     }
     
-    
+
     init() {
         //is going to be replaced by GBR-Code or VEN
-        
         func createPieces(_ type:ChessPiece) -> (Piece, Piece) {
             return (Piece(chessPiece: type, chessColor: .black),
                     Piece(chessPiece: type, chessColor: .white))

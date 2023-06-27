@@ -44,6 +44,39 @@ struct ContentView: View {
                         BeatenPieces(pieces: viewmodel.blackBeatenPieces).frame( height: hStacksHeight * 0.85)
 
                         Spacer()
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 20) {
+                                Button(action: { viewmodel.switchBoard(boardTemplate: "checkMateTemplate") }) {
+                                    Text("Checkmate")
+                                        .padding()
+                                        .background(Color.gray)
+                                        .foregroundColor(.white)
+                                        .cornerRadius(10)
+                                }
+                                Button(action: { viewmodel.switchBoard(boardTemplate: "promotePawnTemplate") }) {
+                                    Text("Promote Pawn")
+                                        .padding()
+                                        .background(Color.gray)
+                                        .foregroundColor(.white)
+                                        .cornerRadius(10)
+                                }
+                                Button(action: { viewmodel.switchBoard(boardTemplate: "rochadeTemplate") }) {
+                                    Text("Rochade")
+                                        .padding()
+                                        .background(Color.gray)
+                                        .foregroundColor(.white)
+                                        .cornerRadius(10)
+                                }
+                                Button(action: { viewmodel.switchBoard(boardTemplate: "enPassantTemplate") }) {
+                                    Text("En Passant")
+                                        .padding()
+                                        .background(Color.gray)
+                                        .foregroundColor(.white)
+                                        .cornerRadius(10)
+                                }
+                            }
+                            .padding()
+                        }
                         
                         
                     }.padding().blur(radius: viewmodel.model.gameIsEnded ? 10 : 0)
