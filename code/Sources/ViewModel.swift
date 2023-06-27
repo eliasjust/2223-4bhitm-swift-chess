@@ -19,10 +19,10 @@ class ViewModel: ObservableObject {
     typealias Coordinates = Model.Coordinate
     typealias PieceDto = Model.PieceDto
     typealias GameDTO = Model.GameDto
-
+    
+    let REFRESHRATE = 0.3
 
     let defaultBlackKingPos = Coordinates(row: 0, column: 4)
-    
     let defaultWhiteKingPos = Coordinates(row: 7, column: 4)
     
     var initialGameState: Bool {
@@ -373,7 +373,7 @@ class ViewModel: ObservableObject {
     var timer: Timer?
 
     func startUpdatingBoard() {
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+        timer = Timer.scheduledTimer(withTimeInterval: REFRESHRATE, repeats: true) { [weak self] _ in
             self?.updateBoard()
         }
     }
@@ -390,6 +390,7 @@ class ViewModel: ObservableObject {
     }
 
     func sendBoard(board: BoardClass) -> Void {
+        stopUpdatingBoard()
         let boardDto = toBoardDto(board: board)
         let gameDto = GameDTO(currentTurnColor: model.currentTurnColor.rawValue, board: boardDto)
 
@@ -418,6 +419,7 @@ class ViewModel: ObservableObject {
             }
         }
         task.resume()
+        self.startUpdatingBoard()
     }
 
     func toBoardDto(board: BoardClass) -> [[PieceDto?]] {
