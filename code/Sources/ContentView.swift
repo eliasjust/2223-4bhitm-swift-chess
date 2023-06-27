@@ -89,7 +89,7 @@ struct ContentView: View {
                 
                 
                 Button("Restart Game", action: viewmodel.restartGame).padding().buttonStyle(.bordered).font(Font.title)
-            }.buttonBorderShape(.roundedRectangle)
+            }.buttonBorderShape(.roundedRectangle).padding()
             
             
         }
